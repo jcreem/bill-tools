@@ -68,14 +68,15 @@ for Sheet_Bill in All_Data:
   Committee_Recommendation = Sheet_Bill[Committee_Recommendation_Header]
   NHLA_Recommendation = Sheet_Bill[NHLA_Recommendation_Header]
   Liberty_Type = Sheet_Bill[Pro_Anti_Liberty_Header] 
+  NHLA_Summary = Sheet_Bill[NHLA_Summary_Header]
   Bullets = Sheet_Bill[Bullets_Header]
 
   if not Bill_Is_DNI(NHLA_Recommendation):
 
     This_Bill = bill.Bill(Number=Bill_Number, Title=Title, Committee=Committee,
-                     Majority_Recommendation=Committee_Recommendation,
-                     Committee_Vote=Committee_Recommendation,
+                     Committee_Recommendation=Committee_Recommendation,
                      Liberty_Type=Liberty_Type,
+                     NHLA_Summary=NHLA_Summary, 
                      NHLA_Recommendation = NHLA_Recommendation,
                      GS_Blurb=Bullets)
 

@@ -1,18 +1,12 @@
 class Bill:
-  Number=""
-  Title=""
-  Committee=""
-  Majority_Recommendation=""
-  Committee_Vote=""
-  Committee_Comments=""
 
-  def __init__(self, Number, Title, Committee, Majority_Recommendation, Committee_Vote, Liberty_Type, NHLA_Recommendation, GS_Blurb):
+  def __init__(self, Number, Title, Committee, Committee_Recommendation, Liberty_Type, NHLA_Summary, NHLA_Recommendation, GS_Blurb):
    self.Number = Number
    self.Title = Title
    self.Committee = Committee
-   self.Majority_Recommendation = Majority_Recommendation
-   self.Committee_Vote = Committee_Vote
+   self.Committe_Recommendation = Committee_Recommendation
    self.Liberty_Type = Liberty_Type
+   self.NHLA_Summary = NHLA_Summary
    self.NHLA_Recommendation = NHLA_Recommendation
    self.GS_Blurb = GS_Blurb
   
