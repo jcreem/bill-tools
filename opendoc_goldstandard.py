@@ -13,7 +13,8 @@ from lpod.heading import odf_create_heading
 from lpod.paragraph import odf_create_paragraph
 from lpod.style import odf_create_style
 from lpod.element import odf_create_element
-
+from lpod.table import odf_create_table
+from lpod.frame import odf_create_image_frame
 
 class Opendoc_Goldstandard:
 
@@ -76,21 +77,63 @@ class Opendoc_Goldstandard:
      
     _style_master.set_footer(p)
 
+    body=self.document.get_body()
+    uri=self.document.add_file('logo_grayscale.svg')
+    Left_Logo_Frame=odf_create_image_frame(
+      url = uri,
+      name = 'left_logo',
+      style = "Classic",
+      size = ("2cm", "3cm"),
+      anchor_type = 'page',
+      page_number = None,
+      position = ("1cm", "1cm"))
+    Left_Logo_Frame.set_svg_title("left_logo")
+    Left_Logo_Frame.set_svg_description("greyscale logo")
+    body.append(Left_Logo_Frame)
+
   def Set_Bills(self, Bill_List):
     self.bill_table=odf_create_table(u"Bill Table",width=2, height=len(Bill_List)*3)
-    body=document.get_body()
+    body=self.document.get_body()
     body.append(self.bill_table)
     row=0
     for Bill in Bill_List:
-      self.bill_table.set_cell(coord=(row,0), value=Bill.Number + ', ' + Bill.Title)
-      self.bill_table.set_cell(coord=(row,1), value=Bill.Number)
-      row++
-      self.bill_table.set_cell(coord=(row,0), value=Bill.Committee + 'Recommendation:' + Bill.Committee_Vote)
-      row++
-      self.bill_table.set_cell(coord=(row,0), value=Bill.Liberty_Type + ':' + Bill.NHLA_Summary)
-      self.bill_table.set_cell(coord=(row,1), value=Bill.NHLA_Recommendation)
-      row++
-      self.bill_table.set_cell(coord=(row,0), value=Bill.GS_Blurb)
+      #
+      # Fill in The bill number and title on the left and just
+      # the bill number on right
+      #
+      self.bill_table.set_value(coord=(0,row), value=Bill.Number + ', ' + Bill.Title)
+      self.bill_table.set_value(coord=(1,row), value=Bill.Number)
+      self.bill_table.set_span(area=(1, row, 1, row+1),merge=True)
+      row=row+1
+
+      #
+      # Fill in the Committee recommendation on left. Noting on right
+      #
+      self.bill_table.set_value(coord=(0,row), value=Bill.Committee + ' Recommendation: ' + Bill.Committee_Recommendation)
+      row=row+1
+
+      #
+      # Fill in the Pro/anti liberty along with the NHLA Summary on left
+      # and the NHLA recommendation on right
+      self.bill_table.set_value(coord=(0,row), value=Bill.Liberty_Type + ':' + Bill.NHLA_Summary)
+      self.bill_table.set_value(coord=(1,row), value=Bill.NHLA_Recommendation)
+      self.bill_table.set_span(area=(1, row, 1, row+1),merge=True)
+      row=row+1
+      
+      #
+      # Fill in the BLurb on left, nothing on right
+      #
+      cell = self.bill_table.get_cell(coord=(0,row))
+      for Bullet_Point in Bill.GS_Blurb.splitlines():
+        paragraph=odf_create_paragraph(unicode(Bullet_Point))
+        cell.append(paragraph)
+      self.bill_table.set_cell(coord=(0,row), cell=cell)
+      row=row+1
+    
+    Left_Col_Style=odf_create_style(family="table-column", width="19.111cm")
+    Left_Col = self.bill_table.get_column(0)
+    Left_Col.set_style(style=Left_Col_Style)
+    self.bill_table.set_column(0,Left_Col)
 
  
   def save(self, name):

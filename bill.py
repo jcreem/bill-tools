@@ -4,7 +4,7 @@ class Bill:
    self.Number = Number
    self.Title = Title
    self.Committee = Committee
-   self.Committe_Recommendation = Committee_Recommendation
+   self.Committee_Recommendation = Committee_Recommendation
    self.Liberty_Type = Liberty_Type
    self.NHLA_Summary = NHLA_Summary
    self.NHLA_Recommendation = NHLA_Recommendation
