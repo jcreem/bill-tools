@@ -18,7 +18,7 @@ from lpod.frame import odf_create_image_frame
 
 class Opendoc_Goldstandard:
 
-  def __init__(self):
+  def __init__(self, title):
     #
     # Create the initial document object, deleting any existing default
     # styles
@@ -67,7 +67,7 @@ class Opendoc_Goldstandard:
       </style:paragraph-properties><style:text-properties \
       style:font-name="Liberation Sans" fo:font-size="7pt"/></style:style>""")
 
-    p = odf_create_paragraph("The New Hampshire Liberty Alliance is a non-partisan coalition working to increase individual liberty, and encourage citizen involvement in the legislative process. Bills on the Gold Standard are evaluated based on their effects on, among other things; civil liberties, personal responsibility, property rights, accountability, constitutionality, and taxation. Roll call votes on Gold Standard bills are the foundation for our annual Liberty Rating report card.")
+    p = odf_create_paragraph(u"The New Hampshire Liberty Alliance is a non-partisan coalition working to increase individual liberty, and encourage citizen involvement in the legislative process. Bills on the Gold Standard are evaluated based on their effects on, among other things; civil liberties, personal responsibility, property rights, accountability, constitutionality, and taxation. Roll call votes on Gold Standard bills are the foundation for our annual Liberty Rating report card.")
 
     _style_page.set_background(color='#dab600')
     _style_footer.set_background(color='#000000')
@@ -78,18 +78,57 @@ class Opendoc_Goldstandard:
     _style_master.set_footer(p)
 
     body=self.document.get_body()
-    uri=self.document.add_file('logo_grayscale.svg')
+    NHLA_Header_Font_Style = odf_create_element(u"""\
+      <style:style style:name="nhla_header" style:family="paragraph" style:class="text">
+      <style:paragraph-properties fo:margin="100%" fo:margin-left="1.20cm" \
+      fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0.10cm" \
+      style:contextual-spacing="false" fo:text-indent="0cm" \
+      style:auto-text-indent="false"/>
+      <style:text-properties style:font-name="Copperplate Gothic Bold" fo:font-size="20pt" \
+      fo:font-weight="normal"/>
+      </style:style>""")
+    self.document.insert_style(NHLA_Header_Font_Style)
+ 
+#    p = odf_create_paragraph(u"New Hampshire Liberty Alliance", u"nhla_header")
+#    body.append(p)
+#    p = odf_create_paragraph(u"GOLD STANDARD")
+#    body.append(p)
+#    p = odf_create_paragraph(unicode(title))
+#    body.append(p)
+
+    logo_style=odf_create_style(family='graphic',name='logo_style', kw=('wrap=page-wrap'))
+    self.document.insert_style(logo_style) 
+    uri=self.document.add_file('logo_grayscale.png')
     Left_Logo_Frame=odf_create_image_frame(
       url = uri,
-      name = 'left_logo',
-      style = "Classic",
-      size = ("2cm", "3cm"),
+      name = u'left_logo',
+      style = u'logo_style',
+      size = ("2.79375cm", "5.313cm"),
       anchor_type = 'page',
-      page_number = None,
-      position = ("1cm", "1cm"))
-    Left_Logo_Frame.set_svg_title("left_logo")
-    Left_Logo_Frame.set_svg_description("greyscale logo")
+      page_number = 1,
+      position = ("0.1cm", "0.1cm"))
+
+
+    Right_Logo_Frame=odf_create_image_frame(
+      url = uri,
+      name = u'left_logo',
+      style = u'logo_style',
+      size = ("2.79375cm", "5.313cm"),
+      anchor_type = 'page',
+      page_number = 1,
+      position = ("18.1cm", "0.1cm"))
+
     body.append(Left_Logo_Frame)
+    body.append(Right_Logo_Frame)
+
+
+    p = odf_create_paragraph(u"New Hampshire Liberty Alliance", u"nhla_header")
+    body.append(p)
+    p = odf_create_paragraph(u"GOLD STANDARD")
+    body.append(p)
+    p = odf_create_paragraph(unicode(title))
+    body.append(p)
+
 
   def Set_Bills(self, Bill_List):
     self.bill_table=odf_create_table(u"Bill Table",width=2, height=len(Bill_List)*3)
@@ -130,9 +169,10 @@ class Opendoc_Goldstandard:
       self.bill_table.set_cell(coord=(0,row), cell=cell)
       row=row+1
     
-    Left_Col_Style=odf_create_style(family="table-column", width="19.111cm")
+    Left_Col_Style=odf_create_style(family="table-column", name=u"left-col-style", width="19.111cm")
+    self.document.insert_style(Left_Col_Style)
     Left_Col = self.bill_table.get_column(0)
-    Left_Col.set_style(style=Left_Col_Style)
+    Left_Col.set_style(style=u"left-col-style")
     self.bill_table.set_column(0,Left_Col)
 
  
