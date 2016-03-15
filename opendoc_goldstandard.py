@@ -11,7 +11,7 @@
 from lpod.document import odf_new_document
 from lpod.heading import odf_create_heading
 from lpod.paragraph import odf_create_paragraph
-from lpod.style import odf_create_style
+from lpod.style import odf_create_style, odf_create_table_cell_style
 from lpod.element import odf_create_element
 from lpod.table import odf_create_table
 from lpod.frame import odf_create_image_frame
@@ -78,15 +78,17 @@ class Opendoc_Goldstandard:
     _style_master.set_footer(p)
 
     body=self.document.get_body()
-    NHLA_Header_Font_Style = odf_create_element(u"""\
-      <style:style style:name="nhla_header" style:family="paragraph" style:class="text">
-      <style:paragraph-properties fo:margin="100%" fo:margin-left="1.20cm" \
-      fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0.10cm" \
-      style:contextual-spacing="false" fo:text-indent="0cm" \
-      style:auto-text-indent="false"/>
-      <style:text-properties style:font-name="Copperplate Gothic Bold" fo:font-size="20pt" \
-      fo:font-weight="normal"/>
-      </style:style>""")
+#    NHLA_Header_Font_Style = odf_create_element(u"""\
+#      <style:style style:name=u"nhla_header" style:family="paragraph" style:class="text">
+#      <style:paragraph-properties fo:margin="100%" fo:margin-left="1.20cm" \
+#      fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0.10cm" \
+#      style:contextual-spacing="false" fo:text-indent="0cm" \
+#      style:auto-text-indent="false"/>
+#      <style:text-properties style:font-name="Copperplate Gothic Bold" fo:font-size="20pt" \
+#      fo:font-weight="normal"/>
+#      </style:style>""")
+    NHLA_Header_Font_Style=odf_create_style(family='text', name=u"nhla_header",
+    kw='font="Copperplate Gothic Bold"')
     self.document.insert_style(NHLA_Header_Font_Style)
  
 #    p = odf_create_paragraph(u"New Hampshire Liberty Alliance", u"nhla_header")
@@ -129,9 +131,30 @@ class Opendoc_Goldstandard:
     p = odf_create_paragraph(unicode(title))
     body.append(p)
 
+    self.Large_Bill_Number_Cell_Style=odf_create_table_cell_style(
+      background_color = 'black')
+    self.document.insert_style(style=self.Large_Bill_Number_Cell_Style,
+                               automatic=True)
+
+    self.Committee_Recommend_Cell_Style=odf_create_table_cell_style(
+      background_color = 'DarkGrey')
+    self.document.insert_style(style=self.Committee_Recommend_Cell_Style,
+                               automatic=True)
+
+    self.NHLA_Recommend_Cell_Style=odf_create_table_cell_style(
+      background_color = 'DarkGrey')
+    self.document.insert_style(style=self.NHLA_Recommend_Cell_Style,
+                               automatic=True)
+
+
+    self.Bill_Title_Cell_Style=odf_create_table_cell_style(
+      background_color = 'Black')
+    self.document.insert_style(style=self.Bill_Title_Cell_Style,
+                               automatic=True)
+
 
   def Set_Bills(self, Bill_List):
-    self.bill_table=odf_create_table(u"Bill Table",width=2, height=len(Bill_List)*3)
+    self.bill_table=odf_create_table(u"Bill_Table",width=2, height=len(Bill_List)*3)
     body=self.document.get_body()
     body.append(self.bill_table)
     row=0
@@ -141,14 +164,25 @@ class Opendoc_Goldstandard:
       # the bill number on right
       #
       self.bill_table.set_value(coord=(0,row), value=Bill.Number + ', ' + Bill.Title)
+      cell=self.bill_table.get_cell(coord=(0,row))
+      cell.set_style(self.Bill_Title_Cell_Style)
+      self.bill_table.set_cell(cell=cell, coord=(0,row))
+
       self.bill_table.set_value(coord=(1,row), value=Bill.Number)
       self.bill_table.set_span(area=(1, row, 1, row+1),merge=True)
+      cell=self.bill_table.get_cell(coord=(1,row))
+      cell.set_style(self.Large_Bill_Number_Cell_Style)
+      self.bill_table.set_cell(cell=cell, coord=(1,row))
+
       row=row+1
 
       #
       # Fill in the Committee recommendation on left. Noting on right
       #
       self.bill_table.set_value(coord=(0,row), value=Bill.Committee + ' Recommendation: ' + Bill.Committee_Recommendation)
+      cell=self.bill_table.get_cell(coord=(0,row))
+      cell.set_style(self.Committee_Recommend_Cell_Style)
+      self.bill_table.set_cell(cell=cell, coord=(0,row))
       row=row+1
 
       #
@@ -157,6 +191,10 @@ class Opendoc_Goldstandard:
       self.bill_table.set_value(coord=(0,row), value=Bill.Liberty_Type + ':' + Bill.NHLA_Summary)
       self.bill_table.set_value(coord=(1,row), value=Bill.NHLA_Recommendation)
       self.bill_table.set_span(area=(1, row, 1, row+1),merge=True)
+      cell=self.bill_table.get_cell(coord=(1,row))
+      cell.set_style(self.NHLA_Recommend_Cell_Style)
+      self.bill_table.set_cell(cell=cell, coord=(1,row))
+
       row=row+1
       
       #
@@ -169,10 +207,10 @@ class Opendoc_Goldstandard:
       self.bill_table.set_cell(coord=(0,row), cell=cell)
       row=row+1
     
-    Left_Col_Style=odf_create_style(family="table-column", name=u"left-col-style", width="19.111cm")
-    self.document.insert_style(Left_Col_Style)
+    Left_Col_Style=odf_create_style(family="table-column", width="19.111cm")
+    self.document.insert_style(Left_Col_Style,automatic=True)
     Left_Col = self.bill_table.get_column(0)
-    Left_Col.set_style(style=u"left-col-style")
+    Left_Col.set_style(style=Left_Col_Style)
     self.bill_table.set_column(0,Left_Col)
 
  
