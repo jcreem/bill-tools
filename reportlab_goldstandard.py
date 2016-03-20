@@ -14,7 +14,6 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import ListFlowable, ListItem
 
 def footer(canvas, doc):
-    #print canvas.getAvailableFonts()
     canvas.saveState()
     Normal_Style=ParagraphStyle('normal')
     Footer_Style = ParagraphStyle('my-footer-style', parent=Normal_Style,
