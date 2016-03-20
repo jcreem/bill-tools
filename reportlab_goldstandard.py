@@ -13,11 +13,24 @@ from reportlab.pdfbase.pdfmetrics import registerFontFamily
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import ListFlowable, ListItem
 
-def footer(canvas, doc):
+def Page_Setup(canvas, doc):
     canvas.saveState()
+
+    canvas.setFillColor(colors.HexColor(0xdab600))
+    canvas.rect(0,0,8.5*inch, 11*inch,fill=1)
+
+    #canvas.setFont("Helvetica", 240)
+    #canvas.setStrokeGray(0.90)
+    #canvas.setFillGray(0.90)
+    #canvas.drawCentredString(5.5 * inch, 3.25 * inch, doc.watermark)
+
+
+    #print "Called" + doc.watermark
+
     Normal_Style=ParagraphStyle('normal')
     Footer_Style = ParagraphStyle('my-footer-style', parent=Normal_Style,
-      textColor=colors.white, backColor=colors.black, alignment=TA_CENTER)
+      textColor=colors.white, backColor=colors.black, alignment=TA_CENTER,
+      fontSize=8, leading=9,font='Courier')
     P = Paragraph("The New Hampshire Liberty Alliance is a non-partisan coalition "
         "working to increase individual liberty, and encourage citizen "
         "involvement in the legislative process. Bills on the Gold Standard "
@@ -39,6 +52,21 @@ def footer(canvas, doc):
 #        self.canv.drawImage(self.img, 0, 0, height = -2*inch, width=4*inch)
 #        # http://www.reportlab.com/apis/reportlab/2.4/pdfgen.html
 
+def AllPageSetup(canvas, doc):
+    canvas.saveState()
+    canvas.setFillColor(colors.HexColor(0xdab600))
+    canvas.rect(0,0,8.5*inch, 11*inch,fill=1)
+
+    canvas.setFont("Helvetica", 240)
+    canvas.setStrokeGray(0.90)
+    canvas.setFillGray(0.90)
+    canvas.drawCentredString(5.5 * inch, 3.25 * inch, doc.watermark)
+
+
+    print "Called" + doc.watermark
+
+    canvas.restoreState()
+
 
 def get_python_image():
   f = open(filename, 'w')
@@ -53,11 +81,13 @@ def To_Bullet_List(GS_Blurb):
       Paragraph_List=[]
 
       Blurbs_Style = ParagraphStyle('blurb-style', parent=Normal_Style,
-            alignment=TA_LEFT,leftIndent=0, spaceBefore=0,spaceAfter=0, font='Helvetica', fontSize=11)
+            alignment=TA_LEFT, leftIndent=6, spaceBefore=0,spaceAfter=0, font='Helvetica', fontSize=11)
 
       for Blurb in GS_Blurb.splitlines():
-          Paragraph_List.append(Paragraph(Normalize_Text(Blurb),Blurbs_Style))
-      return ListFlowable(Paragraph_List, bulletType='bullet', start='bulletchar', bulletFontSize=11)
+          Bullet_Para = Paragraph(Normalize_Text(Blurb),Blurbs_Style)
+          Bullet_List_Item=ListItem(Bullet_Para, leftIndent=25, bulletColor=colors.black,bulletType='bullet')
+          Paragraph_List.append(Bullet_List_Item)
+      return ListFlowable(Paragraph_List, leftIndent=10, bulletType='bullet', start='bulletchar', bulletFontSize=11)
 
 
 class Reportlab_Goldstandard:
@@ -75,7 +105,7 @@ class Reportlab_Goldstandard:
 
     frame = Frame(self.doc.leftMargin, self.doc.bottomMargin, self.doc.width,
                   self.doc.height, id='normal', showBoundary=1)
-    template = PageTemplate(id='test', frames=frame, onPage=footer)
+    template = PageTemplate(id='test', frames=frame, onPage=Page_Setup)
     self.doc.addPageTemplates([template])
 
     self.doc.elements=[]
@@ -90,7 +120,7 @@ class Reportlab_Goldstandard:
     GS_Header_Style = ParagraphStyle('gs-header-style', parent=Normal_Style,
      alignment=TA_CENTER,leading=45,spaceBefore=0,spaceAfter=0)
     GS_Title_Style = ParagraphStyle('gs-title-style', parent=Normal_Style,
-     alignment=TA_CENTER, spaceBefore=0,spaceAfter=0)
+     alignment=TA_CENTER, spaceBefore=0,spaceAfter=5)
 
     NHLA_Title_Para=Paragraph('<font name="Copperplate-Bold" size=20>New Hampshire Liberty Alliance</font>', NHLA_Style)
     GS_Header_Para=Paragraph('<font name="Copperplate-Bold" size=71>Gold Standard</font>', GS_Header_Style)
@@ -99,7 +129,7 @@ class Reportlab_Goldstandard:
     t=Table([[I,NHLA_Title_Para,''],
             ['',GS_Header_Para, ''],
             ['NHLIBERTY.ORG',GS_Title_Para,'']], [1.25*inch, 6*inch, 1.25*inch],
-            [0.2*inch, 1.85*inch, 0.20*inch])
+            [0.2*inch, 1.75*inch, 0.24*inch])
     Header_Table_Style=TableStyle([
     ('TOPPADDING',(0,0),(-1,-1),0),
     ('BOTTOMPADDING',(0,0),(-1,-1),0),
@@ -115,52 +145,19 @@ class Reportlab_Goldstandard:
   def Set_Bills(self, Bill_List):
     self.Insert_First_Page_Header()
     Normal_Style=ParagraphStyle('normal')
-    #
-    # Convert the bill data into table format
-    RL_Bill_Table=[]
-    Left_Inner_Table_Style=TableStyle([
-      ('FONT',(0,0),(-1,1), 'Helvetica'),
-      ('FONTSIZE',(0,0),(-1,-1),12),
-      ('BACKGROUND',(0,0),(0,0),colors.black),
-      ('BACKGROUND',(0,1),(0,1),colors.grey),
-      ('TEXTCOLOR',(0,0),(0,0),colors.white),
-      ('LEFTPADDING',(0,0),(-1,-1),0),
-      ('RIGHTPADDING',(0,0),(-1,-1),0),
-      ('TOPPADDING',(0,0),(-1,-1),0),
-      ('BOTTOMPADDING',(0,0),(-1,-1),0),
-      ('ALIGN',(0,0),(-1,-1),'LEFT'),
-      ('VALIGN',(0,0),(-1,-1),'MIDDLE')
-    ])
 
-    Right_Inner_Table_Style=TableStyle([
-      ('FONT',(0,0),(-1,1), 'Helvetica'),
-      ('FONTSIZE',(0,0),(-1,-1),25),
-      ('BACKGROUND',(0,0),(-1,-1),colors.black),
-      ('TEXTCOLOR',(0,0),(-1,-1), colors.white),
-      ('TOPPADDING',(0,0),(-1,-1),0),
-      ('BOTTOMPADDING',(0,0),(-1,-1),0),
-      ('ALIGN',(0,0),(-1,-1),'CENTER'),
-      ('VALIGN',(0,0),(-1,-1),'MIDDLE')
-    ])
-    Right_Inner_Para_Style=ParagraphStyle(
+    Right_Para_Style=ParagraphStyle(
       'right-col-style',
       parent=ParagraphStyle('normal'),
       alignment=TA_CENTER,
-      fontSize=25,
+      fontSize=28,
       leading=27,
-      textColor=colors.white,
-      backColor=colors.black,
       spaceBefore=0,
       spaceAfter=0,
-      fontName='Helvetica')
+      backColor=colors.black,
+      textColor=colors.white,
+      fontName='Helvetica-Bold')
 
-    Bill_Table_Style=TableStyle([
-      ('LEFTPADDING',(0,0),(-1,-1),0),
-      ('RIGHTPADDING',(0,0),(-1,-1),0),
-      ('TOPPADDING',(0,0),(-1,-1),0),
-      ('BOTTOMPADDING',(0,0),(-1,-1),0),
-      ('ALIGN',(0,0),(-1,-1),'LEFT')
-    ])
 
     Number_And_Title_Para_Style=Normal_Style=ParagraphStyle('num-title-style',
       parent=Normal_Style, alignment=TA_LEFT,leftIndent=6, textColor=colors.white,
@@ -175,32 +172,55 @@ class Reportlab_Goldstandard:
       parent=Normal_Style, alignment=TA_LEFT,leftIndent=6, textColor=colors.black,
       fontName='Helvetica-Bold', fontSize=11, leading=15)
 
+    #
+    # Convert the bill data into table format
+    RL_Bill_Table=[]
+    RL_Bill_Table_Style=TableStyle([
+      ('LEFTPADDING',(0,0),(-1,-1),0),
+      ('RIGHTPADDING',(0,0),(-1,-1),0),
+      ('TOPPADDING',(0,0),(-1,-1),0),
+      ('BOTTOMPADDING',(0,0),(-1,-1),2),
+      ('VALIGN',(1,0),(1,-1),'MIDDLE'),
+      ('BACKGROUND',(1,0),(1,-1),colors.black)
+      ])
+
+    #
+    # Each time through this loop, we add all of the rows to the RL_Bill_Table
+    Base_Row=0
     for Bill in Bill_List:
-        Right_Inner_Table=Table([[Paragraph(Bill.Number, Right_Inner_Para_Style)],
-                                 [Paragraph(Bill.NHLA_Recommendation, Right_Inner_Para_Style)]],
-          [1.5*inch])
-        Right_Inner_Table.setStyle(Right_Inner_Table_Style)
         Number_And_Title_Para=Paragraph(Bill.Number + ', ' +
           Normalize_Text(Bill.Title), Number_And_Title_Para_Style)
+        Number_Only_Para = Paragraph(Bill.Number, Right_Para_Style)
+        RL_Bill_Table.append([Number_And_Title_Para, Number_Only_Para])
 
         Committee_And_Recommendation_Para=Paragraph(Bill.Committee + ': ' +
           Bill.Committee_Recommendation, Committee_And_Recommend_Para_Style)
+        RL_Bill_Table.append([Committee_And_Recommendation_Para, ''])
 
         Liberty_Type_And_Summary_Para=Paragraph(Bill.Liberty_Type + ': ' +
           Normalize_Text(Bill.NHLA_Summary), Liberty_Type_And_Summary_Para_Style)
+        NHLA_Recommend_Para=Paragraph(Bill.NHLA_Recommendation, Right_Para_Style)
+        RL_Bill_Table.append([Liberty_Type_And_Summary_Para, NHLA_Recommend_Para])
 
-        Left_Inner_Table=Table([[Number_And_Title_Para],
-                                [Committee_And_Recommendation_Para],
-                                [Liberty_Type_And_Summary_Para],
-                                [To_Bullet_List(Bill.GS_Blurb)]], [7*inch])
-        Left_Inner_Table.setStyle(Left_Inner_Table_Style)
-        RL_Bill_Table.append([Left_Inner_Table,Right_Inner_Table])
+        RL_Bill_Table.append([To_Bullet_List(Bill.GS_Blurb), ''])
+        RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row),(0,Base_Row), colors.black)
+        RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row+1),(0,Base_Row+1), colors.grey)
+        RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row+2), (0,Base_Row+3), colors.transparent)
+        RL_Bill_Table_Style.add('VALIGN',(0,Base_Row),(0,Base_Row+3),"TOP")
+        RL_Bill_Table_Style.add('SPAN', (1,Base_Row), (1,Base_Row+1))
+        RL_Bill_Table_Style.add('SPAN', (1,Base_Row+2), (1,Base_Row+3))
+        RL_Bill_Table_Style.add('NOSPLIT', (0,Base_Row),(1,Base_Row+3))
+        Base_Row=Base_Row+4
 
-    t=Table(RL_Bill_Table, [7*inch, 1.5*inch])
-    t.setStyle(Bill_Table_Style)
+
+    t=Table(RL_Bill_Table, [7.06*inch, 1.44*inch])
+#    print RL_Bill_Table_Style.getCommands()
+    t.setStyle(RL_Bill_Table_Style)
+#    t.setStyle(Bill_Table_Style)
     self.doc.elements.append(t)
 
 
   def save(self):
     self.doc.elements.append(PageBreak())
+    self.doc.watermark="DRAFT"
     self.doc.build(self.doc.elements)
