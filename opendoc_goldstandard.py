@@ -218,26 +218,27 @@ fo:font-size="25pt"/></style:style>""")
                                content=Bill.NHLA_Recommendation,
                                style= u'Right-Table-Para')
       Set_Cell_Background(self.bill_table,(1,row), self.NHLA_Recommend_Cell_Style)
-#      cell=self.bill_table.get_cell(coord=(1,row))
-#      cell.set_style(self.NHLA_Recommend_Cell_Style)
-#      self.bill_table.set_cell(cell=cell, coord=(1,row))
-
       row=row+1
 
       #
       # Fill in the BLurb on left, nothing on right
       #
-      cell = self.bill_table.get_cell(coord=(0,row))
-      for Bullet_Point in Bill.GS_Blurb.splitlines():
-        paragraph=odf_create_paragraph(unicode(Bullet_Point))
-        cell.append(paragraph)
-      self.bill_table.set_cell(coord=(0,row), cell=cell)
+      Add_To_Cell_As_Paragraph(Table=self.bill_table, coord=(0,row),
+        content=Bill.GS_Blurb)
+
       row=row+1
 
-    Left_Col_Style=odf_create_style(family="table-column", width="19.111cm")
-    self.document.insert_style(Left_Col_Style,automatic=True)
+    # Left_Col_Style=odf_create_style(family="table-column", width="19.111cm")
+    #Left_Col_Style = odf_create_element(u"""\
+    ##  <style:style style:name="Left-Col-Style" style:family="table-column">
+     # <style:table-column-properties style:column-width="6.1458in"
+     # style:rel-column-width="8850*"/></style:style>""")
+
+    Left_Col_Style=odf_create_style(family=u'table-column',name=u"Left-Col-Style")
+    Left_Col_Style.set_properties(width="18.1458cm")
+    self.document.insert_style(Left_Col_Style)
     Left_Col = self.bill_table.get_column(0)
-    Left_Col.set_style(style=Left_Col_Style)
+    Left_Col.set_style(style=u"Left-Col-Style")
     self.bill_table.set_column(0,Left_Col)
 
 
