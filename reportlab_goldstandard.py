@@ -54,12 +54,11 @@ def To_Bullet_List(GS_Blurb):
       Paragraph_List=[]
 
       Blurbs_Style = ParagraphStyle('blurb-style', parent=Normal_Style,
-            alignment=TA_LEFT,spaceBefore=0,spaceAfter=0, font='Helvetica', fontSize=11)
-
+            alignment=TA_LEFT,leftIndent=0, spaceBefore=0,spaceAfter=0, font='Helvetica', fontSize=11)
 
       for Blurb in GS_Blurb.splitlines():
-          Paragraph_List.append(Paragraph(Normalize_Text(Blurb),Normal_Style))
-      return ListFlowable(Paragraph_List, bulletType='bullet', start='circle', bulletFontSize=6, leftIdent=14)
+          Paragraph_List.append(Paragraph(Normalize_Text(Blurb),Blurbs_Style))
+      return ListFlowable(Paragraph_List, bulletType='bullet', start='bulletchar', bulletFontSize=11)
 
 
 class Reportlab_Goldstandard:
@@ -97,11 +96,11 @@ class Reportlab_Goldstandard:
     NHLA_Title_Para=Paragraph('<font name="Copperplate-Bold" size=20>New Hampshire Liberty Alliance</font>', NHLA_Style)
     GS_Header_Para=Paragraph('<font name="Copperplate-Bold" size=71>Gold Standard</font>', GS_Header_Style)
     GS_Title_Para=Paragraph('<font name="Copperplate" size=15>' + self.title + '</font>', GS_Title_Style)
-    I=Image('logo_grayscale.png', width=1.1*inch, height=2.1*inch)
+    I=Image('logo_grayscale.png', width=0.99*inch, height=1.89*inch)
     t=Table([[I,NHLA_Title_Para,''],
             ['',GS_Header_Para, ''],
             ['NHLIBERTY.ORG',GS_Title_Para,'']], [1.25*inch, 6*inch, 1.25*inch],
-            [0.2*inch, 1.85*inch, 0.22*inch])
+            [0.2*inch, 1.85*inch, 0.20*inch])
     Header_Table_Style=TableStyle([
     ('TOPPADDING',(0,0),(-1,-1),0),
     ('BOTTOMPADDING',(0,0),(-1,-1),0),
