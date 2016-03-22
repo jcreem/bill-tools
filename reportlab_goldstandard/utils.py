@@ -9,7 +9,7 @@ from reportlab.lib.units import inch
 def Page_Setup(canvas, doc):
     canvas.saveState()
 
-    canvas.setFillColor(colors.HexColor(0xdab600))
+    canvas.setFillColor(doc.gs_background)
     canvas.rect(0,0,8.5*inch, 11*inch,fill=1)
 
     #canvas.setFont("Helvetica", 240)

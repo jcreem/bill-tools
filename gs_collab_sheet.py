@@ -3,7 +3,8 @@ import gspread
 import argparse
 import json
 import logging
-from reportlab_goldstandard import Reportlab_Goldstandard
+from reportlab_goldstandard import generate
+
 import bill
 
 import re
@@ -46,6 +47,8 @@ parser = argparse.ArgumentParser(description="")
 parser.add_argument("url")
 parser.add_argument("title")
 parser.add_argument("filename")
+parser.add_argument("--gold", help="Makes the background gold",
+ action="store_true")
 args = parser.parse_args()
 
 logging.basicConfig(filename='gs_generation.log',level=logging.INFO)
@@ -98,8 +101,11 @@ for Sheet_Bill in All_Data:
 # the sheet excluding only those bills that were explicitly excluded.
 #
 Bill_List.sort()
+if args.gold:
+  gs = generate.Goldstandard(title=args.title,filename=args.filename,background=generate.Gold)
+else:
+  gs = generate.Goldstandard(title=args.title,filename=args.filename,background=generate.White)
 
-gs = Reportlab_Goldstandard(title=args.title,filename=args.filename)
 gs.Set_Bills(Bill_List)
 gs.save()
 #for GS_Bill in Bill_List:
