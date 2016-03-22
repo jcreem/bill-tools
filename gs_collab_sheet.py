@@ -24,7 +24,11 @@ def Bill_Is_DNI(NHLA_Recommendation):
 def Normalize_Sheet_Data(Item):
     if type(Item) == type(str()):
       return Item
+    elif type(Item) == type(u""):
+      return Item.encode('ascii','ignore')
     else:
+      #      print type(Item)
+      #           print Item.encode('ascii','ignore')
       return ""
 
 
