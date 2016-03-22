@@ -31,13 +31,13 @@ class Goldstandard:
                                       italic='Copperplate',
                                       boldItalic='Copplerplate-Bold')
     self.doc = BaseDocTemplate(filename, pagesize=letter, leftMargin=0.0*inch,
-    rightMargin=0.0*inch, topMargin=0.0*inch, bottomMargin=0.0*inch)
+    rightMargin=0.0*inch, topMargin=0.0*inch, bottomMargin=0.5*inch)
 
     self.doc.gs_background = background
 
 
     frame = Frame(self.doc.leftMargin, self.doc.bottomMargin, self.doc.width,
-                  self.doc.height, id='normal', showBoundary=1)
+                  self.doc.height, id='normal')
     template = PageTemplate(id='test', frames=frame, onPage=utils.Page_Setup)
     self.doc.addPageTemplates([template])
 
@@ -125,7 +125,6 @@ class Goldstandard:
       ('RIGHTPADDING',(0,0),(-1,-1),0),
       ('TOPPADDING',(0,0),(-1,-1),0),
       ('BOTTOMPADDING',(0,0),(-1,-1),2),
-      ('VALIGN',(1,0),(1,-1),'MIDDLE'),
       ('BACKGROUND',(1,0),(1,-1),colors.black)
       ])
 
@@ -153,6 +152,8 @@ class Goldstandard:
         RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row+1),(0,Base_Row+1), colors.grey)
         RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row+2), (0,Base_Row+3), colors.transparent)
         RL_Bill_Table_Style.add('VALIGN',(0,Base_Row),(0,Base_Row+3),"TOP")
+        RL_Bill_Table_Style.add('VALIGN',(1, Base_Row), (1, Base_Row), "TOP")
+        RL_Bill_Table_Style.add('VALIGN',(1, Base_Row+2), (1, Base_Row+3), "MIDDLE")
         RL_Bill_Table_Style.add('SPAN', (1,Base_Row), (1,Base_Row+1))
         RL_Bill_Table_Style.add('SPAN', (1,Base_Row+2), (1,Base_Row+3))
         RL_Bill_Table_Style.add('NOSPLIT', (0,Base_Row),(1,Base_Row+3))
@@ -160,9 +161,7 @@ class Goldstandard:
 
 
     t=Table(RL_Bill_Table, [7.06*inch, 1.44*inch])
-#    print RL_Bill_Table_Style.getCommands()
     t.setStyle(RL_Bill_Table_Style)
-#    t.setStyle(Bill_Table_Style)
     self.doc.elements.append(t)
 
 

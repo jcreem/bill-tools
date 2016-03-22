@@ -23,7 +23,7 @@ def Page_Setup(canvas, doc):
     Normal_Style=ParagraphStyle('normal')
     Footer_Style = ParagraphStyle('my-footer-style', parent=Normal_Style,
       textColor=colors.white, backColor=colors.black, alignment=TA_CENTER,
-      fontSize=8, leading=9,font='Courier')
+      fontSize=8, leading=9,font='Courier',borderPadding=(0,0,5,0))
     P = Paragraph("The New Hampshire Liberty Alliance is a non-partisan coalition "
         "working to increase individual liberty, and encourage citizen "
         "involvement in the legislative process. Bills on the Gold Standard "
@@ -33,7 +33,7 @@ def Page_Setup(canvas, doc):
         "Gold Standard bills are the foundation for our annual Liberty "
         "Rating report card.", Footer_Style)
     w,h = P.wrap(doc.width, doc.bottomMargin)
-    P.drawOn(canvas, doc.leftMargin,doc.bottomMargin)
+    P.drawOn(canvas, doc.leftMargin,3)
     canvas.restoreState()
 
 #class flowable_fig(reportlab.platypus.Flowable):
