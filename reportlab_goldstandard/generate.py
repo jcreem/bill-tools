@@ -55,15 +55,17 @@ class Goldstandard:
     GS_Title_Style = ParagraphStyle('gs-title-style', parent=Normal_Style,
      alignment=TA_CENTER, spaceBefore=0,spaceAfter=5)
 
-    Summary_Recommend_Style= ParagraphStyle('summary-style', parent=Normal_Style,
-        alignment=TA_LEFT,spaceBefore=0,spaceAfter=0,font='Helvetica',size=10)
+
 
     NHLA_Title_Para=Paragraph('<font name="Copperplate-Bold" size=20>New Hampshire Liberty Alliance</font>', NHLA_Style)
     GS_Header_Para=Paragraph('<font name="Copperplate-Bold" size=71>Gold Standard</font>', GS_Header_Style)
     GS_Title_Para=Paragraph('<font name="Copperplate" size=15>' + self.title + '</font>', GS_Title_Style)
-    I=Image('logo_grayscale-new.png', width=0.99*inch, height=1.877*inch,mask='auto')
+    I=Image('logo_grayscale-new2.png', width=0.99*inch, height=1.877*inch,mask='auto')
     I_Trans=Image('logo_grayscale-trans.png', width=0.99*inch, height=1.877*inch,mask='auto')
     if len(Bills) <= 13:
+      Summary_Recommend_Style= ParagraphStyle('summary-style', parent=Normal_Style,
+        alignment=TA_LEFT,spaceBefore=0,spaceAfter=0,font='Helvetica',size=10)
+
       Bill_List=[]
 
       for Bill in Bills:
@@ -74,8 +76,8 @@ class Goldstandard:
       Top_Row=[I,NHLA_Title_Para,I]
     t=Table([Top_Row,
             ['',GS_Header_Para, ''],
-            ['NHLIBERTY.ORG',GS_Title_Para,'']], [1.2*inch, 5.6*inch, 1.3*inch],
-            [0.2*inch, 1.75*inch, 0.24*inch])
+            ['NHLIBERTY.ORG',GS_Title_Para,'']], [1.3*inch, 5.6*inch, 1.3*inch],
+            [0.2*inch, 1.55*inch, 0.22*inch])
     Header_Table_Style=TableStyle([
     ('TOPPADDING',(0,0),(-1,-1),0),
     ('BOTTOMPADDING',(0,0),(-1,-1),0),
@@ -95,6 +97,10 @@ class Goldstandard:
         Summary_Table=[]
         Bills_Per_Col=len(Bills)//Cols
 
+        Summary_Recommend_Style= ParagraphStyle('summary-style', parent=Normal_Style,
+          alignment=TA_LEFT,spaceBefore=0,spaceAfter=0,font='Helvetica',size=10,
+          textColor=colors.white)
+
         for Base_Index in range(0, Bills_Per_Col):
             Row=[]
             for Col_Index in range(0, Cols):
@@ -105,7 +111,7 @@ class Goldstandard:
 
 #        print Summary_Table
         Summary_Table_Style=TableStyle([
-        ('ROWBACKGROUNDS',(0,0),(-1,-1),[colors.grey, colors.black])
+        ('ROWBACKGROUNDS',(0,0),(-1,-1),[colors.black, colors.grey])
         ])
         t=Table(data=Summary_Table,colWidths=[(8.5*inch)/Cols]*Cols)
         t.setStyle(Summary_Table_Style)
