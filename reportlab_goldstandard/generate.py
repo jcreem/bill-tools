@@ -12,12 +12,16 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.pdfmetrics import registerFontFamily
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import ListFlowable, ListItem
+from betterTables import BetterTable
 
 import utils
 
 
 Gold = colors.HexColor(0xdab600)
 White = colors.white
+
+Top_Right_To_Inline_Summary_Cutover = 13
+
 
 class Goldstandard:
 
@@ -58,27 +62,26 @@ class Goldstandard:
 
 
     NHLA_Title_Para=Paragraph('<font name="Copperplate-Bold" size=20>New Hampshire Liberty Alliance</font>', NHLA_Style)
-    GS_Header_Para=Paragraph('<font name="Copperplate-Bold" size=71>Gold Standard</font>', GS_Header_Style)
-    GS_Title_Para=Paragraph('<font name="Copperplate" size=15>' + self.title + '</font>', GS_Title_Style)
+    GS_Header_Para=Paragraph('<font name="Copperplate-Bold" size=70>Gold Standard</font>', GS_Header_Style)
+    GS_Title_Para=Paragraph('<font name="Copperplate" size=14>' + self.title + '</font>', GS_Title_Style)
     NHLA_URL_Title=Paragraph('<font name="Copperplate-Bold" size=10>' + "NHLIBERTY.ORG" + '</font>', GS_Title_Style)
     I=Image('logo_grayscale-new2.png', width=0.99*inch, height=1.877*inch,mask='auto')
     I_Trans=Image('logo_grayscale-trans.png', width=0.99*inch, height=1.877*inch,mask='auto')
-    if len(Bills) <= 13:
+    if len(Bills) <= Top_Right_To_Inline_Summary_Cutover:
       Summary_Recommend_Style= ParagraphStyle('summary-style', parent=Normal_Style,
-        alignment=TA_LEFT,spaceBefore=0,spaceAfter=0,font='Helvetica',size=10)
+        alignment=TA_LEFT,spaceBefore=0,spaceAfter=0,font='Helvetica',size=9)
 
       Bill_List=[]
 
       for Bill in Bills:
         Bill_List.append(Paragraph(Bill.Number + ' ' + Bill.NHLA_Recommendation, Summary_Recommend_Style))
-#      Summary_Recommend=ListFlowable(Bill_List, bulletType='bullet', start=None)
       Top_Row=[I, NHLA_Title_Para, Bill_List]
     else:
       Top_Row=[I,NHLA_Title_Para,I]
     t=Table([Top_Row,
             ['',GS_Header_Para, ''],
-            [NHLA_URL_Title,GS_Title_Para,'']], [1.4*inch, 5.6*inch, 1.4*inch],
-            [0.2*inch, 1.55*inch, 0.22*inch])
+            [NHLA_URL_Title, GS_Title_Para, '']], [1.4*inch, 5.6*inch, 1.4*inch],
+            [0.2*inch, 1.55*inch, 0.24*inch])
     Header_Table_Style=TableStyle([
     ('TOPPADDING',(0,0),(-1,-1),0),
     ('BOTTOMPADDING',(0,0),(-1,-1),0),
@@ -93,7 +96,7 @@ class Goldstandard:
     self.doc.elements.append(t)
 
 
-    if len(Bills)>13:
+    if len(Bills)>Top_Right_To_Inline_Summary_Cutover:
         self.doc.elements.append(Spacer(8.5*inch, 0.05*inch))
         Cols=5
         Summary_Table=[]
@@ -135,7 +138,6 @@ class Goldstandard:
       leading=27,
       spaceBefore=0,
       spaceAfter=0,
-      backColor=colors.black,
       textColor=colors.white,
       fontName='Helvetica-Bold')
 
@@ -160,8 +162,7 @@ class Goldstandard:
       ('LEFTPADDING',(0,0),(-1,-1),0),
       ('RIGHTPADDING',(0,0),(-1,-1),0),
       ('TOPPADDING',(0,0),(-1,-1),0),
-      ('BOTTOMPADDING',(0,0),(-1,-1),2),
-      ('BACKGROUND',(1,0),(1,-1),colors.black)
+      ('BOTTOMPADDING',(0,0),(-1,-1),0)
       ])
 
     #
@@ -184,19 +185,23 @@ class Goldstandard:
 
         RL_Bill_Table.append([utils.To_Bullet_List(Bill.GS_Blurb), ''])
 
-        RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row),(0,Base_Row), colors.black)
-        RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row+1),(0,Base_Row+1), colors.grey)
+        RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row), (0,Base_Row), colors.black)
+        RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row+1), (0,Base_Row+1), ["HORIZONTAL", colors.HexColor(0x606060), colors.black])
         RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row+2), (0,Base_Row+3), colors.transparent)
         RL_Bill_Table_Style.add('VALIGN',(0,Base_Row),(0,Base_Row+3),"TOP")
         RL_Bill_Table_Style.add('VALIGN',(1, Base_Row), (1, Base_Row), "TOP")
         RL_Bill_Table_Style.add('VALIGN',(1, Base_Row+2), (1, Base_Row+3), "MIDDLE")
         RL_Bill_Table_Style.add('SPAN', (1,Base_Row), (1,Base_Row+1))
         RL_Bill_Table_Style.add('SPAN', (1,Base_Row+2), (1,Base_Row+3))
+        RL_Bill_Table_Style.add('BACKGROUND', (1,Base_Row), (1,Base_Row+1), colors.black)
+        RL_Bill_Table_Style.add('BACKGROUND', (1,Base_Row+2), (1,Base_Row+3), ["VERTICAL", colors.black, colors.HexColor(0x606060)])
+        RL_Bill_Table_Style.add('TOPPADDING',(1,Base_Row+2), (1,Base_Row+3),15)
+        RL_Bill_Table_Style.add('BOTTOMPADDING',(1,Base_Row+2), (1,Base_Row+3),15)
         RL_Bill_Table_Style.add('NOSPLIT', (0,Base_Row),(1,Base_Row+3))
         Base_Row=Base_Row+4
 
 
-    t=Table(RL_Bill_Table, [7.06*inch, 1.44*inch])
+    t=BetterTable(RL_Bill_Table, [7.06*inch, 1.44*inch])
     t.setStyle(RL_Bill_Table_Style)
     self.doc.elements.append(t)
 

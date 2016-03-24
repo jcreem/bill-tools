@@ -17,6 +17,7 @@
 # Where <Direction> is either HORIZONTAL or VERTICAL
 #
 from reportlab.platypus import Table
+from reportlab.lib import colors
 
 class BetterTable(Table):
   def _drawBkgrnd(self):
