@@ -60,6 +60,7 @@ class Goldstandard:
     NHLA_Title_Para=Paragraph('<font name="Copperplate-Bold" size=20>New Hampshire Liberty Alliance</font>', NHLA_Style)
     GS_Header_Para=Paragraph('<font name="Copperplate-Bold" size=71>Gold Standard</font>', GS_Header_Style)
     GS_Title_Para=Paragraph('<font name="Copperplate" size=15>' + self.title + '</font>', GS_Title_Style)
+    NHLA_URL_Title=Paragraph('<font name="Copperplate-Bold" size=10>' + "NHLIBERTY.ORG" + '</font>', GS_Title_Style)
     I=Image('logo_grayscale-new2.png', width=0.99*inch, height=1.877*inch,mask='auto')
     I_Trans=Image('logo_grayscale-trans.png', width=0.99*inch, height=1.877*inch,mask='auto')
     if len(Bills) <= 13:
@@ -76,7 +77,7 @@ class Goldstandard:
       Top_Row=[I,NHLA_Title_Para,I]
     t=Table([Top_Row,
             ['',GS_Header_Para, ''],
-            ['NHLIBERTY.ORG',GS_Title_Para,'']], [1.3*inch, 5.6*inch, 1.3*inch],
+            [NHLA_URL_Title,GS_Title_Para,'']], [1.4*inch, 5.6*inch, 1.4*inch],
             [0.2*inch, 1.55*inch, 0.22*inch])
     Header_Table_Style=TableStyle([
     ('TOPPADDING',(0,0),(-1,-1),0),
@@ -93,6 +94,7 @@ class Goldstandard:
 
 
     if len(Bills)>13:
+        self.doc.elements.append(Spacer(8.5*inch, 0.05*inch))
         Cols=5
         Summary_Table=[]
         Bills_Per_Col=len(Bills)//Cols
@@ -116,7 +118,7 @@ class Goldstandard:
         t=Table(data=Summary_Table,colWidths=[(8.5*inch)/Cols]*Cols)
         t.setStyle(Summary_Table_Style)
         self.doc.elements.append(t)
-        self.doc.elements.append(Spacer(8.5*inch, 0.1*inch))
+        self.doc.elements.append(Spacer(8.5*inch, 0.05*inch))
 
 
 
