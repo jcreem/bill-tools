@@ -26,12 +26,11 @@ White = colors.white
 class Goldstandard:
 
   def __init__(self, title, filename, background=Gold, \
-               Top_Right_To_Inline_Summary_Cutover = 15):
+               Top_Right_To_Inline_Summary_Cutover = 14):
     self.title=title
     self.Top_Right_To_Inline_Summary_Cutover = Top_Right_To_Inline_Summary_Cutover
 
-#    pdfmetrics.registerFont(TTFont('Copperplate-Bold', 'COPRGTB.TTF'))
-#    pdfmetrics.registerFont(TTFont('Copperplate', 'COPRGTL.TTF'))
+
     pdfmetrics.registerFont(TTFont('Copperplate-Bold', 'ufonts.com_copperplate-bold.ttf'))
     pdfmetrics.registerFont(TTFont('Copperplate', 'ufonts.com_copperplate.ttf'))
     registerFontFamily('Copperplate', normal='Copperplate',

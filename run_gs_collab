@@ -1,0 +1,10 @@
+#!/bin/sh
+export GOOGLE_APPLICATION_CREDENTIALS=NHLAGS-e8b3911072d5.json
+Sheet_URL=$1
+GS_Title="Senate Session March 31, 2016"
+File_Base="goldstandard-3-31-16-S"
+./gs_collab_sheet.py "$Sheet_URL" \
+  "$GS_Title" $File_Base.pdf
+
+  ./gs_collab_sheet.py "$Sheet_URL" \
+    "$GS_Title" $File_Base"-y".pdf --gold
