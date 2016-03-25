@@ -29,10 +29,10 @@ def Normalize_Bill_Number(Bill_Number):
 # Tables a normalized bill number and removes all text after the numeric
 # portion of the bill (typically where things like -FN or Local are)
 #
-def Brief_Bill_Number(Bill_Number):
+def Brief_Bill_Number(Bill_Number, Separator=' '):
   m = Bill_Number_Pattern.match(Bill_Number)
 
-  return m.group(Bill_Prefix).upper() + ' ' + m.group(Bill_Numeric_Portion)
+  return m.group(Bill_Prefix).upper() + Separator + m.group(Bill_Numeric_Portion)
 
 
 class Bill:
