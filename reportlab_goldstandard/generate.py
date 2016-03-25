@@ -68,9 +68,10 @@ class Goldstandard:
     GS_Header_Para=Paragraph('<font name="Copperplate-Bold" size=68>Gold Standard</font>', GS_Header_Style)
     GS_Title_Para=Paragraph('<font name="Copperplate" size=14>' + self.title + '</font>', GS_Title_Style)
     NHLA_URL_Title=Paragraph('<font name="Copperplate-Bold" size=10>' + "<a href=http://nhliberty.org/>NHLIBERTY.ORG</a>" + '</font>', GS_Title_Style)
-    I=Image('logo_grayscale-new2.png', width=0.99*inch, height=1.877*inch,mask='auto')
 
 
+    self.doc.leftLogoFile='logo_grayscale-new2.png'
+    self.doc.rightLogoFile='logo_grayscale-new2.png'
     if len(Bills) <= self.Top_Right_To_Inline_Summary_Cutover:
       Summary_Recommend_Style= ParagraphStyle('summary-style', \
         parent=Normal_Style, alignment=TA_LEFT,spaceBefore=0,
@@ -82,11 +83,17 @@ class Goldstandard:
         Bill_List.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + ' ' + \
           Bill.NHLA_Recommendation, Summary_Recommend_Style))
       Top_Row=['', NHLA_Title_Para, Bill_List]
+      Bottom_Row=[NHLA_URL_Title, GS_Title_Para, '']
+
+      self.doc.rightLogoFile='logo_grayscale-trans.png'
     else:
       Top_Row=['',NHLA_Title_Para,'']
+      Bottom_Row=[NHLA_URL_Title, GS_Title_Para, NHLA_URL_Title]
+
+
     t=Table([Top_Row,
             ['',GS_Header_Para, ''],
-            [NHLA_URL_Title, GS_Title_Para, '']], [1.4*inch, 5.6*inch, 1.4*inch])
+            Bottom_Row], [1.4*inch, 5.6*inch, 1.4*inch])
 
     #
     # These odd negative and seemly random top and bottom paddings were required

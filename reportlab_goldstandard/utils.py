@@ -15,10 +15,10 @@ def Page_Setup(canvas, doc):
 
     if canvas.getPageNumber() == 1:
 
-      canvas.drawImage('logo_grayscale-new2.png',x=0.3*inch, y=8.7*inch,\
+      canvas.drawImage(doc.leftLogoFile,x=0.3*inch, y=8.7*inch,\
                        width=0.92*inch, mask='auto', preserveAspectRatio=True)
 
-      canvas.drawImage('logo_grayscale-trans.png',x=7.3*inch, y=8.7*inch,\
+      canvas.drawImage(doc.rightLogoFile,x=7.3*inch, y=8.7*inch,\
                        width=0.92*inch, mask='auto', preserveAspectRatio=True)
 
 
