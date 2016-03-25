@@ -25,7 +25,7 @@ White = colors.white
 
 class Goldstandard:
 
-  def __init__(self, title, filename, background=Gold, Top_Right_To_Inline_Summary_Cutover = 13):
+  def __init__(self, title, filename, background=Gold, Top_Right_To_Inline_Summary_Cutover = 15):
     self.title=title
     self.Top_Right_To_Inline_Summary_Cutover = Top_Right_To_Inline_Summary_Cutover
 
@@ -70,7 +70,7 @@ class Goldstandard:
     I_Trans=Image('logo_grayscale-trans.png', width=0.99*inch, height=1.877*inch,mask='auto')
     if len(Bills) <= self.Top_Right_To_Inline_Summary_Cutover:
       Summary_Recommend_Style= ParagraphStyle('summary-style', parent=Normal_Style,
-        alignment=TA_LEFT,spaceBefore=0,spaceAfter=0,font='Helvetica',size=9)
+        alignment=TA_LEFT,spaceBefore=0,spaceAfter=0,font='Helvetica-Bold',size=9, leading=9)
 
       Bill_List=[]
 
