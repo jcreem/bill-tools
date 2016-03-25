@@ -4,13 +4,20 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.platypus import ListFlowable, ListItem
 from reportlab.lib import colors
 from reportlab.lib.units import inch
-
+from reportlab.platypus import Image
 
 def Page_Setup(canvas, doc):
+
     canvas.saveState()
 
     canvas.setFillColor(doc.gs_background)
     canvas.rect(0,0,8.5*inch, 11*inch,fill=1)
+
+    if canvas.getPageNumber() == 1:
+      I_Trans=Image('logo_grayscale-trans.png', width=0.99*inch, \
+                     height=1.877*inch,mask='auto')
+      canvas.drawImage('logo_grayscale-trans.png',x=7.3*inch, y=9.0*inch,\
+                       width=0.99*inch, height=1.877*inch, mask='auto')
 
     #canvas.setFont("Helvetica", 240)
     #canvas.setStrokeGray(0.90)

@@ -25,19 +25,20 @@ White = colors.white
 
 class Goldstandard:
 
-  def __init__(self, title, filename, background=Gold, Top_Right_To_Inline_Summary_Cutover = 15):
+  def __init__(self, title, filename, background=Gold, \
+               Top_Right_To_Inline_Summary_Cutover = 15):
     self.title=title
     self.Top_Right_To_Inline_Summary_Cutover = Top_Right_To_Inline_Summary_Cutover
 
     pdfmetrics.registerFont(TTFont('Copperplate-Bold', 'COPRGTB.TTF'))
     pdfmetrics.registerFont(TTFont('Copperplate', 'COPRGTL.TTF'))
+
     registerFontFamily('Copperplate', normal='Copperplate',
                                       bold='Copperplate-Bold',
                                       italic='Copperplate',
                                       boldItalic='Copplerplate-Bold')
     self.doc = BaseDocTemplate(filename, pagesize=letter, leftMargin=0.0*inch,
-    rightMargin=0.0*inch, topMargin=0.0*inch, bottomMargin=0.5*inch)
-
+      rightMargin=0.0*inch, topMargin=0.0*inch, bottomMargin=0.5*inch)
     self.doc.gs_background = background
 
 
@@ -65,17 +66,20 @@ class Goldstandard:
     NHLA_Title_Para=Paragraph('<font name="Copperplate-Bold" size=20>New Hampshire Liberty Alliance</font>', NHLA_Style)
     GS_Header_Para=Paragraph('<font name="Copperplate-Bold" size=70>Gold Standard</font>', GS_Header_Style)
     GS_Title_Para=Paragraph('<font name="Copperplate" size=14>' + self.title + '</font>', GS_Title_Style)
-    NHLA_URL_Title=Paragraph('<font name="Copperplate-Bold" size=10>' + "NHLIBERTY.ORG" + '</font>', GS_Title_Style)
+    NHLA_URL_Title=Paragraph('<font name="Copperplate-Bold" size=10>' + "<a href=http://nhliberty.org/>NHLIBERTY.ORG</a>" + '</font>', GS_Title_Style)
     I=Image('logo_grayscale-new2.png', width=0.99*inch, height=1.877*inch,mask='auto')
-    I_Trans=Image('logo_grayscale-trans.png', width=0.99*inch, height=1.877*inch,mask='auto')
+
+
     if len(Bills) <= self.Top_Right_To_Inline_Summary_Cutover:
-      Summary_Recommend_Style= ParagraphStyle('summary-style', parent=Normal_Style,
-        alignment=TA_LEFT,spaceBefore=0,spaceAfter=0,font='Helvetica-Bold',size=9, leading=9)
+      Summary_Recommend_Style= ParagraphStyle('summary-style', \
+        parent=Normal_Style, alignment=TA_LEFT,spaceBefore=0,
+        spaceAfter=0,font='Helvetica-Bold',size=9, leading=9)
 
       Bill_List=[]
 
       for Bill in Bills:
-        Bill_List.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + ' ' + Bill.NHLA_Recommendation, Summary_Recommend_Style))
+        Bill_List.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + ' ' + \
+          Bill.NHLA_Recommendation, Summary_Recommend_Style))
       Top_Row=[I, NHLA_Title_Para, Bill_List]
     else:
       Top_Row=[I,NHLA_Title_Para,I]
@@ -171,7 +175,10 @@ class Goldstandard:
     # Each time through this loop, we add all of the rows to the RL_Bill_Table
     Base_Row=0
     for Bill in Bill_List:
-        Number_And_Title_Para=Paragraph(Bill.Number + ', ' +
+        URL_Text="<a href=http://www.nhliberty.org/bills/view/2016/" + \
+          bill.Brief_Bill_Number(Bill.Number, Separator='') + ">"
+
+        Number_And_Title_Para=Paragraph(URL_Text + Bill.Number + '</a>, ' +
           utils.Normalize_Text(Bill.Title), Number_And_Title_Para_Style)
         Number_Only_Para = Paragraph(bill.Brief_Bill_Number(Bill.Number), Right_Para_Style)
         RL_Bill_Table.append([Number_And_Title_Para, Number_Only_Para])
@@ -209,6 +216,4 @@ class Goldstandard:
 
 
   def save(self):
-    self.doc.elements.append(PageBreak())
-    self.doc.watermark="DRAFT"
     self.doc.build(self.doc.elements)
