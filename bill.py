@@ -1,3 +1,13 @@
+import re
+
+def Normalize_Bill_Number(Bill_Number):
+  p = re.compile('(\s*)([A-Za-z\-]*)(\s*)(\d*)')
+  m = p.match(Bill_Number)
+
+  return m.group(2) + ' ' + m.group(4)
+
+
+
 class Bill:
 
   def __init__(self, Number, Title, Committee, Committee_Recommendation, Liberty_Type, NHLA_Summary, NHLA_Recommendation, GS_Blurb):
@@ -9,7 +19,7 @@ class Bill:
    self.NHLA_Summary = NHLA_Summary
    self.NHLA_Recommendation = NHLA_Recommendation
    self.GS_Blurb = GS_Blurb
-  
+
   def Get_Bill_Number(self):
     return self.Number
 

@@ -13,14 +13,10 @@ import re
 from oauth2client.client import GoogleCredentials
 
 
-def Normalize_Bill_Number(Bill_Number):
-  p = re.compile('(\s*)([A-Za-z]*)(\s*)(\d*)')
-  m = p.match(Bill_Number)
-#  print m.group(1) + '_' +m.group(2) + '_' + m.group(3) + m.group(4)
-  return m.group(2) + ' ' + m.group(4)
+
 
 def Bill_Is_DNI(NHLA_Recommendation):
-  return 'DNI' in NHLA_Recommendation
+  return 'DNI' in NHLA_Recommendation.upper()
 
 def Normalize_Sheet_Data(Item):
     if type(Item) == type(str()):
@@ -56,7 +52,6 @@ logging.basicConfig(filename='gs_generation.log',level=logging.INFO)
 json_key = json.load(open('NHLAGS-e8b3911072d5.json'))
 scope = ['https://spreadsheets.google.com/feeds']
 
-#credentials = ServiceAccountCredentials(json_key['client_email'], json_key['private_key'].encode(), scope)
 credentials = GoogleCredentials.get_application_default()
 credentials = credentials.create_scoped(scope)
 
@@ -74,11 +69,13 @@ All_Data = sht1.sheet1.get_all_records()
 # we include it in the bill list
 #
 for Sheet_Bill in All_Data:
-  Bill_Number = Normalize_Bill_Number(Sheet_Bill[Bill_Number_Header])
+  Bill_Number = bill.Normalize_Bill_Number(Sheet_Bill[Bill_Number_Header])
   Title = Normalize_Sheet_Data(Sheet_Bill[Title_Header])
   Committee = Normalize_Sheet_Data(Sheet_Bill[Committee_Name_Header])
-  Committee_Recommendation = Normalize_Sheet_Data(Sheet_Bill[Committee_Recommendation_Header])
-  NHLA_Recommendation = Normalize_Sheet_Data(Sheet_Bill[NHLA_Recommendation_Header])
+  Committee_Recommendation = Normalize_Sheet_Data(
+    Sheet_Bill[Committee_Recommendation_Header])
+  NHLA_Recommendation = Normalize_Sheet_Data(
+    Sheet_Bill[NHLA_Recommendation_Header])
   Liberty_Type = Normalize_Sheet_Data(Sheet_Bill[Pro_Anti_Liberty_Header])
   NHLA_Summary = Normalize_Sheet_Data(Sheet_Bill[NHLA_Summary_Header])
   Bullets = Normalize_Sheet_Data(Sheet_Bill[Bullets_Header])
@@ -102,9 +99,11 @@ for Sheet_Bill in All_Data:
 #
 Bill_List.sort()
 if args.gold:
-  gs = generate.Goldstandard(title=args.title,filename=args.filename,background=generate.Gold)
+  gs = generate.Goldstandard(title=args.title,filename=args.filename,
+                             background=generate.Gold)
 else:
-  gs = generate.Goldstandard(title=args.title,filename=args.filename,background=generate.White)
+  gs = generate.Goldstandard(title=args.title,filename=args.filename,
+                             background=generate.White)
 
 gs.Set_Bills(Bill_List)
 gs.save()
