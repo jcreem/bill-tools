@@ -30,9 +30,10 @@ class Goldstandard:
     self.title=title
     self.Top_Right_To_Inline_Summary_Cutover = Top_Right_To_Inline_Summary_Cutover
 
-    pdfmetrics.registerFont(TTFont('Copperplate-Bold', 'COPRGTB.TTF'))
-    pdfmetrics.registerFont(TTFont('Copperplate', 'COPRGTL.TTF'))
-
+#    pdfmetrics.registerFont(TTFont('Copperplate-Bold', 'COPRGTB.TTF'))
+#    pdfmetrics.registerFont(TTFont('Copperplate', 'COPRGTL.TTF'))
+    pdfmetrics.registerFont(TTFont('Copperplate-Bold', 'ufonts.com_copperplate-bold.ttf'))
+    pdfmetrics.registerFont(TTFont('Copperplate', 'ufonts.com_copperplate.ttf'))
     registerFontFamily('Copperplate', normal='Copperplate',
                                       bold='Copperplate-Bold',
                                       italic='Copperplate',
@@ -55,7 +56,7 @@ class Goldstandard:
   def Insert_First_Page_Header(self, Bills):
     Normal_Style=ParagraphStyle('normal')
     NHLA_Style = ParagraphStyle('nhla-style', parent=Normal_Style,
-      alignment=TA_CENTER,spaceBefore=0,spaceAfter=0)
+      alignment=TA_CENTER)
     GS_Header_Style = ParagraphStyle('gs-header-style', parent=Normal_Style,
      alignment=TA_CENTER,leading=45,spaceBefore=0,spaceAfter=0)
     GS_Title_Style = ParagraphStyle('gs-title-style', parent=Normal_Style,
@@ -64,7 +65,7 @@ class Goldstandard:
 
 
     NHLA_Title_Para=Paragraph('<font name="Copperplate-Bold" size=20>New Hampshire Liberty Alliance</font>', NHLA_Style)
-    GS_Header_Para=Paragraph('<font name="Copperplate-Bold" size=70>Gold Standard</font>', GS_Header_Style)
+    GS_Header_Para=Paragraph('<font name="Copperplate-Bold" size=68>Gold Standard</font>', GS_Header_Style)
     GS_Title_Para=Paragraph('<font name="Copperplate" size=14>' + self.title + '</font>', GS_Title_Style)
     NHLA_URL_Title=Paragraph('<font name="Copperplate-Bold" size=10>' + "<a href=http://nhliberty.org/>NHLIBERTY.ORG</a>" + '</font>', GS_Title_Style)
     I=Image('logo_grayscale-new2.png', width=0.99*inch, height=1.877*inch,mask='auto')
@@ -80,21 +81,31 @@ class Goldstandard:
       for Bill in Bills:
         Bill_List.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + ' ' + \
           Bill.NHLA_Recommendation, Summary_Recommend_Style))
-      Top_Row=[I, NHLA_Title_Para, Bill_List]
+      Top_Row=['', NHLA_Title_Para, Bill_List]
     else:
-      Top_Row=[I,NHLA_Title_Para,I]
+      Top_Row=['',NHLA_Title_Para,'']
     t=Table([Top_Row,
             ['',GS_Header_Para, ''],
-            [NHLA_URL_Title, GS_Title_Para, '']], [1.4*inch, 5.6*inch, 1.4*inch],
-            [0.2*inch, 1.55*inch, 0.24*inch])
+            [NHLA_URL_Title, GS_Title_Para, '']], [1.4*inch, 5.6*inch, 1.4*inch])
+
+    #
+    # These odd negative and seemly random top and bottom paddings were required
+    # to get reasonably tight packing of the header data. No combination of
+    # vertical alignment request or forced cell heights came close enough
+    # to what we would want here
     Header_Table_Style=TableStyle([
-    ('TOPPADDING',(0,0),(-1,-1),0),
-    ('BOTTOMPADDING',(0,0),(-1,-1),0),
+    ('TOPPADDING',(1,0),(1,0),-5),
+    ('TOPPADDING',(1,1),(1,1),-20),
+    ('TOPPADDING',(1,2),(1,2),-4),
+    ('TOPPADDING',(0,2),(0,2),-1),
+    ('TOPPADDING',(2,0),(2,0),-2),
+    ('BOTTOMPADDING',(1,1),(1,1),27),
+    ('BOTTOMPADDING',(1,2),(1,2),6),
+#    ('LINEABOVE',(0,0),(-1,-1),0.25,colors.green),
     ('LEFTPADDING',(0,0),(-1,-1),0),
     ('RIGHTPADDING',(0,0),(-1,-1),0),
+    ('VALIGN',(0,0),(-1,-1),"TOP"),
     ('ALIGN',(0,0),(-1,-1),'CENTER'),
-    ('VALIGN',(0,0),(-1,-1), 'TOP'),
-    ('SPAN',(0,0), (0,1)),
     ('SPAN',(2,0), (2,2))
     ])
     t.setStyle(Header_Table_Style)

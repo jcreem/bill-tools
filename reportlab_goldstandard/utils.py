@@ -14,18 +14,14 @@ def Page_Setup(canvas, doc):
     canvas.rect(0,0,8.5*inch, 11*inch,fill=1)
 
     if canvas.getPageNumber() == 1:
-      I_Trans=Image('logo_grayscale-trans.png', width=0.99*inch, \
-                     height=1.877*inch,mask='auto')
-      canvas.drawImage('logo_grayscale-trans.png',x=7.3*inch, y=9.0*inch,\
-                       width=0.99*inch, height=1.877*inch, mask='auto')
 
-    #canvas.setFont("Helvetica", 240)
-    #canvas.setStrokeGray(0.90)
-    #canvas.setFillGray(0.90)
-    #canvas.drawCentredString(5.5 * inch, 3.25 * inch, doc.watermark)
+      canvas.drawImage('logo_grayscale-new2.png',x=0.3*inch, y=8.7*inch,\
+                       width=0.92*inch, mask='auto', preserveAspectRatio=True)
+
+      canvas.drawImage('logo_grayscale-trans.png',x=7.3*inch, y=8.7*inch,\
+                       width=0.92*inch, mask='auto', preserveAspectRatio=True)
 
 
-    #print "Called" + doc.watermark
 
     Normal_Style=ParagraphStyle('normal')
     Footer_Style = ParagraphStyle('my-footer-style', parent=Normal_Style,
@@ -43,14 +39,7 @@ def Page_Setup(canvas, doc):
     P.drawOn(canvas, doc.leftMargin,3)
     canvas.restoreState()
 
-#class flowable_fig(reportlab.platypus.Flowable):
-#    def __init__(self, imgdata):
-#        reportlab.platypus.Flowable.__init__(self)
-#        self.img = reportlab.lib.utils.ImageReader(imgdata)
-#
-#    def draw(self):
-#        self.canv.drawImage(self.img, 0, 0, height = -2*inch, width=4*inch)
-#        # http://www.reportlab.com/apis/reportlab/2.4/pdfgen.html
+
 
 def AllPageSetup(canvas, doc):
     canvas.saveState()
