@@ -13,6 +13,7 @@ from reportlab.pdfbase.pdfmetrics import registerFontFamily
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import ListFlowable, ListItem
 from betterTables import BetterTable
+import bill
 
 import utils
 
@@ -20,13 +21,13 @@ import utils
 Gold = colors.HexColor(0xdab600)
 White = colors.white
 
-Top_Right_To_Inline_Summary_Cutover = 13
 
 
 class Goldstandard:
 
-  def __init__(self, title, filename,background=Gold):
+  def __init__(self, title, filename, background=Gold, Top_Right_To_Inline_Summary_Cutover = 13):
     self.title=title
+    self.Top_Right_To_Inline_Summary_Cutover = Top_Right_To_Inline_Summary_Cutover
 
     pdfmetrics.registerFont(TTFont('Copperplate-Bold', 'COPRGTB.TTF'))
     pdfmetrics.registerFont(TTFont('Copperplate', 'COPRGTL.TTF'))
@@ -67,14 +68,14 @@ class Goldstandard:
     NHLA_URL_Title=Paragraph('<font name="Copperplate-Bold" size=10>' + "NHLIBERTY.ORG" + '</font>', GS_Title_Style)
     I=Image('logo_grayscale-new2.png', width=0.99*inch, height=1.877*inch,mask='auto')
     I_Trans=Image('logo_grayscale-trans.png', width=0.99*inch, height=1.877*inch,mask='auto')
-    if len(Bills) <= Top_Right_To_Inline_Summary_Cutover:
+    if len(Bills) <= self.Top_Right_To_Inline_Summary_Cutover:
       Summary_Recommend_Style= ParagraphStyle('summary-style', parent=Normal_Style,
         alignment=TA_LEFT,spaceBefore=0,spaceAfter=0,font='Helvetica',size=9)
 
       Bill_List=[]
 
       for Bill in Bills:
-        Bill_List.append(Paragraph(Bill.Number + ' ' + Bill.NHLA_Recommendation, Summary_Recommend_Style))
+        Bill_List.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + ' ' + Bill.NHLA_Recommendation, Summary_Recommend_Style))
       Top_Row=[I, NHLA_Title_Para, Bill_List]
     else:
       Top_Row=[I,NHLA_Title_Para,I]
@@ -96,7 +97,7 @@ class Goldstandard:
     self.doc.elements.append(t)
 
 
-    if len(Bills)>Top_Right_To_Inline_Summary_Cutover:
+    if len(Bills)>self.Top_Right_To_Inline_Summary_Cutover:
         self.doc.elements.append(Spacer(8.5*inch, 0.05*inch))
         Cols=5
         Summary_Table=[]
@@ -111,7 +112,8 @@ class Goldstandard:
             for Col_Index in range(0, Cols):
               if Base_Index+Col_Index*Bills_Per_Col < len(Bills):
                 Bill=Bills[Base_Index+Col_Index*Bills_Per_Col]
-                Row.append(Paragraph(Bill.Number + ' ' + Bill.NHLA_Recommendation, Summary_Recommend_Style))
+                Row.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + \
+                  ' ' + Bill.NHLA_Recommendation, Summary_Recommend_Style))
             Summary_Table.append(Row)
 
 #        print Summary_Table
@@ -171,7 +173,7 @@ class Goldstandard:
     for Bill in Bill_List:
         Number_And_Title_Para=Paragraph(Bill.Number + ', ' +
           utils.Normalize_Text(Bill.Title), Number_And_Title_Para_Style)
-        Number_Only_Para = Paragraph(Bill.Number, Right_Para_Style)
+        Number_Only_Para = Paragraph(bill.Brief_Bill_Number(Bill.Number), Right_Para_Style)
         RL_Bill_Table.append([Number_And_Title_Para, Number_Only_Para])
 
         Committee_And_Recommendation_Para=Paragraph(Bill.Committee + ': ' +
@@ -195,8 +197,8 @@ class Goldstandard:
         RL_Bill_Table_Style.add('SPAN', (1,Base_Row+2), (1,Base_Row+3))
         RL_Bill_Table_Style.add('BACKGROUND', (1,Base_Row), (1,Base_Row+1), colors.black)
         RL_Bill_Table_Style.add('BACKGROUND', (1,Base_Row+2), (1,Base_Row+3), ["VERTICAL", colors.black, colors.HexColor(0x606060)])
-        RL_Bill_Table_Style.add('TOPPADDING',(1,Base_Row+2), (1,Base_Row+3),15)
-        RL_Bill_Table_Style.add('BOTTOMPADDING',(1,Base_Row+2), (1,Base_Row+3),15)
+        RL_Bill_Table_Style.add('TOPPADDING',(1,Base_Row+2), (1,Base_Row+3),7)
+        RL_Bill_Table_Style.add('BOTTOMPADDING',(1,Base_Row+2), (1,Base_Row+3),7)
         RL_Bill_Table_Style.add('NOSPLIT', (0,Base_Row),(1,Base_Row+3))
         Base_Row=Base_Row+4
 
