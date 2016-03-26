@@ -74,7 +74,7 @@ class Goldstandard:
     if len(Bills) <= self.Top_Right_To_Inline_Summary_Cutover:
       Summary_Recommend_Style= ParagraphStyle('summary-style', \
         parent=Normal_Style, alignment=TA_LEFT,spaceBefore=0,
-        spaceAfter=0,font='Helvetica-Bold',size=9, leading=9)
+        spaceAfter=0,fontName='Helvetica-Bold',size=8, leading=8)
 
       Bill_List=[]
 
@@ -125,7 +125,7 @@ class Goldstandard:
         Bills_Per_Col=len(Bills)//Cols
 
         Summary_Recommend_Style= ParagraphStyle('summary-style', parent=Normal_Style,
-          alignment=TA_LEFT,spaceBefore=0,spaceAfter=0,font='Helvetica',size=10,
+          alignment=TA_LEFT,spaceBefore=0,spaceAfter=0,fontName='Helvetica',size=10,
           textColor=colors.white)
 
         for Base_Index in range(0, Bills_Per_Col):
@@ -157,8 +157,8 @@ class Goldstandard:
       'right-col-style',
       parent=ParagraphStyle('normal'),
       alignment=TA_CENTER,
-      fontSize=28,
-      leading=27,
+      fontSize=26,
+      leading=26,
       spaceBefore=0,
       spaceAfter=0,
       textColor=colors.white,

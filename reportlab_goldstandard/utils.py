@@ -26,7 +26,7 @@ def Page_Setup(canvas, doc):
     Normal_Style=ParagraphStyle('normal')
     Footer_Style = ParagraphStyle('my-footer-style', parent=Normal_Style,
       textColor=colors.white, backColor=colors.black, alignment=TA_CENTER,
-      fontSize=8, leading=9,font='Courier',borderPadding=(0,0,5,0))
+      fontSize=6, leading=7,fontName='Courier',borderPadding=(0,0,5,0))
     P = Paragraph("The New Hampshire Liberty Alliance is a non-partisan coalition "
         "working to increase individual liberty, and encourage citizen "
         "involvement in the legislative process. Bills on the Gold Standard "
@@ -67,10 +67,11 @@ def To_Bullet_List(GS_Blurb):
       Paragraph_List=[]
 
       Blurbs_Style = ParagraphStyle('blurb-style', parent=Normal_Style,
-            alignment=TA_LEFT, leftIndent=6, spaceBefore=0,spaceAfter=0, font='Helvetica', fontSize=11)
+            alignment=TA_LEFT, leftIndent=6, spaceBefore=0,spaceAfter=0, fontName='Helvetica', fontSize=11)
 
       for Blurb in GS_Blurb.splitlines():
-          Bullet_Para = Paragraph(Normalize_Text(Blurb),Blurbs_Style)
-          Bullet_List_Item=ListItem(Bullet_Para, leftIndent=25, bulletColor=colors.black,bulletType='bullet')
-          Paragraph_List.append(Bullet_List_Item)
+          if len(Blurb) > 1:
+            Bullet_Para = Paragraph(Normalize_Text(Blurb),Blurbs_Style)
+            Bullet_List_Item=ListItem(Bullet_Para, leftIndent=25, bulletColor=colors.black,bulletType='bullet')
+            Paragraph_List.append(Bullet_List_Item)
       return ListFlowable(Paragraph_List, leftIndent=10, bulletType='bullet', start='bulletchar', bulletFontSize=11)
