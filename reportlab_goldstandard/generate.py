@@ -223,6 +223,7 @@ class Goldstandard:
         RL_Bill_Table_Style.add('BACKGROUND', (1,Base_Row+2), (1,Base_Row+3), ["VERTICAL", colors.black, colors.HexColor(0x606060)])
         RL_Bill_Table_Style.add('TOPPADDING',(1,Base_Row+2), (1,Base_Row+3),7)
         RL_Bill_Table_Style.add('BOTTOMPADDING',(1,Base_Row+2), (1,Base_Row+3),7)
+        RL_Bill_Table_Style.add('BOTTOMPADDING',(0,Base_Row+3), (0,Base_Row+3),3)
         RL_Bill_Table_Style.add('NOSPLIT', (0,Base_Row),(1,Base_Row+3))
         Base_Row=Base_Row+4
 
