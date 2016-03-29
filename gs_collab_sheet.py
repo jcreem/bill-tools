@@ -103,8 +103,8 @@ def Create_Goldstandard_From_Sheet(
   # So, at this point we have a list with the current data from
   # the sheet excluding only those bills that were explicitly excluded.
   #
-  Bill_List.sort()
-  gs = generate.Goldstandard(title=Title,filename=Filename,
+  # Bill_List.sort()
+  gs = generate.Goldstandard(title=GS_Title,filename=Filename,
                              background=Background_Color)
 
   gs.Set_Bills(Bill_List)
@@ -130,6 +130,7 @@ if __name__ == "__main__":
   else:
     Background_Color=generate.White
 
+  print args.title
   Create_Goldstandard_From_Sheet(
     Sheet_URL=args.url,
     GS_Title=args.title,

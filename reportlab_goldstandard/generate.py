@@ -53,6 +53,7 @@ class Goldstandard:
 
 
   def Insert_First_Page_Header(self, Bills):
+    print self.title
     Normal_Style=ParagraphStyle('normal')
     NHLA_Style = ParagraphStyle('nhla-style', parent=Normal_Style,
       alignment=TA_CENTER)
@@ -71,14 +72,22 @@ class Goldstandard:
 
     self.doc.leftLogoFile='logo_grayscale-new2.png'
     self.doc.rightLogoFile='logo_grayscale-new2.png'
-    if len(Bills) <= self.Top_Right_To_Inline_Summary_Cutover:
+
+    #
+    # We want the summary sorted but we want to leave the original bills
+    # in original order
+    #
+    Summary_Bills=list(Bills)
+    Summary_Bills.sort()
+
+    if len(Summary_Bills) <= self.Top_Right_To_Inline_Summary_Cutover:
       Summary_Recommend_Style= ParagraphStyle('summary-style', \
         parent=Normal_Style, alignment=TA_LEFT,spaceBefore=0,
         spaceAfter=0,fontName='Helvetica-Bold',size=8, leading=8)
 
       Bill_List=[]
 
-      for Bill in Bills:
+      for Bill in Summary_Bills:
         Bill_List.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + ' ' + \
           Bill.NHLA_Recommendation, Summary_Recommend_Style))
       Top_Row=['', NHLA_Title_Para, Bill_List]
@@ -118,7 +127,7 @@ class Goldstandard:
     self.doc.elements.append(t)
 
 
-    if len(Bills)>self.Top_Right_To_Inline_Summary_Cutover:
+    if len(Summary_Bills)>self.Top_Right_To_Inline_Summary_Cutover:
         self.doc.elements.append(Spacer(8.5*inch, 0.05*inch))
         Cols=5
         Summary_Table=[]
@@ -131,8 +140,8 @@ class Goldstandard:
         for Base_Index in range(0, Bills_Per_Col):
             Row=[]
             for Col_Index in range(0, Cols):
-              if Base_Index+Col_Index*Bills_Per_Col < len(Bills):
-                Bill=Bills[Base_Index+Col_Index*Bills_Per_Col]
+              if Base_Index+Col_Index*Bills_Per_Col < len(Summary_Bills):
+                Bill=Summary_Bills[Base_Index+Col_Index*Bills_Per_Col]
                 Row.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + \
                   ' ' + Bill.NHLA_Recommendation, Summary_Recommend_Style))
             Summary_Table.append(Row)
