@@ -60,7 +60,21 @@ def get_python_image():
   f.close()
 
 def Normalize_Text(Text):
-  return Text.strip("* .") + '.'
+  #
+  # Strip *, space and . from the start and end of the string and add on a
+  # period. This makes sure we always have a period at the end of sentences
+  # and removes any 'bullet' characters typed as * in the sheet
+  #
+  Raw_Text=Text.strip("* .") + '.'
+  #
+  # Turn single and double quotes into HTML excape sequences for those
+  # characters. While the docs are not 100% clear on this, reportlab does not
+  # handle these characters within pargraph components without escaping
+  # them.
+  #
+  Raw_Text=Raw_Text.replace("'","&#39;")
+  Raw_Text=Raw_Text.replace('"',"&#34;")
+  return Raw_Text
 
 def To_Bullet_List(GS_Blurb):
       Normal_Style=ParagraphStyle('normal')

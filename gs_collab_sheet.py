@@ -44,12 +44,13 @@ def Normalize_Sheet_Data(Item):
   # possible, then it returns a null string
   #
   if type(Item) == type(str()):
-    return Item
+    Return_Item = Item
   elif type(Item) == type(u""):
-    return Item.encode('ascii','ignore')
+    Return_Item = Item.encode('ascii','ignore')
   else:
-    return ""
+    Return_Item = ""
 
+  return Return_Item
 
 def Create_Goldstandard_From_Sheet(
   Sheet_URL, GS_Title, Filename, JSON_Key_File, Background_Color):
@@ -130,7 +131,6 @@ if __name__ == "__main__":
   else:
     Background_Color=generate.White
 
-  print args.title
   Create_Goldstandard_From_Sheet(
     Sheet_URL=args.url,
     GS_Title=args.title,

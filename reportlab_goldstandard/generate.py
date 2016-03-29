@@ -53,7 +53,7 @@ class Goldstandard:
 
 
   def Insert_First_Page_Header(self, Bills):
-    print self.title
+
     Normal_Style=ParagraphStyle('normal')
     NHLA_Style = ParagraphStyle('nhla-style', parent=Normal_Style,
       alignment=TA_CENTER)
