@@ -124,10 +124,11 @@ if __name__ == "__main__":
   args = parser.parse_args()
 
   logging.basicConfig(filename='gs_generation.log',level=logging.INFO)
+
   if args.gold:
-    Background_Color=generate.White
-  else:
     Background_Color=generate.Gold
+  else:
+    Background_Color=generate.White
 
   Create_Goldstandard_From_Sheet(
     Sheet_URL=args.url,

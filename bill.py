@@ -20,20 +20,28 @@ Bill_Number_Pattern = re.compile(
 # 'SB 456'
 #
 def Normalize_Bill_Number(Bill_Number):
-  m = Bill_Number_Pattern.match(Bill_Number)
 
-  return m.group(Bill_Prefix).upper() + ' ' +\
-    m.group(Bill_Numeric_Portion).upper()+m.group(Post_Numeric_Suffix).upper()
+  try:
+    m = Bill_Number_Pattern.match(Bill_Number)
+    Return_Value= m.group(Bill_Prefix).upper() + ' ' +\
+      m.group(Bill_Numeric_Portion).upper()+m.group(Post_Numeric_Suffix).upper()
+  except:
+    Return_Value="Malformed Bill# "
+
+  return Return_Value
 
 #
 # Tables a normalized bill number and removes all text after the numeric
 # portion of the bill (typically where things like -FN or Local are)
 #
 def Brief_Bill_Number(Bill_Number, Separator=' '):
-  m = Bill_Number_Pattern.match(Bill_Number)
+  try:
+    m = Bill_Number_Pattern.match(Bill_Number)
+    Return_Value=m.group(Bill_Prefix).upper() + Separator + m.group(Bill_Numeric_Portion)
+  except:
+    Return_Value="Malformed Bill#"
 
-  return m.group(Bill_Prefix).upper() + Separator + m.group(Bill_Numeric_Portion)
-
+  return Return_Value
 
 class Bill:
 
