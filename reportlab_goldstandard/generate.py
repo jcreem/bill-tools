@@ -14,6 +14,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import ListFlowable, ListItem
 from betterTables import BetterTable
 import bill
+import os.path
 
 import utils
 
@@ -29,10 +30,11 @@ class Goldstandard:
                Top_Right_To_Inline_Summary_Cutover = 14):
     self.title=title
     self.Top_Right_To_Inline_Summary_Cutover = Top_Right_To_Inline_Summary_Cutover
+ 
+    self.Resource_Path=os.path.dirname(os.path.realpath( __file__ ))+"/../"
 
-
-    pdfmetrics.registerFont(TTFont('Copperplate-Bold', 'ufonts.com_copperplate-bold.ttf'))
-    pdfmetrics.registerFont(TTFont('Copperplate', 'ufonts.com_copperplate.ttf'))
+    pdfmetrics.registerFont(TTFont('Copperplate-Bold', self.Resource_Path+'ufonts.com_copperplate-bold.ttf'))
+    pdfmetrics.registerFont(TTFont('Copperplate', self.Resource_Path+'ufonts.com_copperplate.ttf'))
     registerFontFamily('Copperplate', normal='Copperplate',
                                       bold='Copperplate-Bold',
                                       italic='Copperplate',
@@ -70,8 +72,8 @@ class Goldstandard:
     NHLA_URL_Title=Paragraph('<font name="Copperplate-Bold" size=10>' + "<a href=http://nhliberty.org/>NHLIBERTY.ORG</a>" + '</font>', GS_Title_Style)
 
 
-    self.doc.leftLogoFile='logo_grayscale-new2.png'
-    self.doc.rightLogoFile='logo_grayscale-new2.png'
+    self.doc.leftLogoFile=self.Resource_Path + 'logo_grayscale-new2.png'
+    self.doc.rightLogoFile=self.Resource_Path + 'logo_grayscale-new2.png'
 
     #
     # We want the summary sorted but we want to leave the original bills
@@ -93,7 +95,7 @@ class Goldstandard:
       Top_Row=['', NHLA_Title_Para, Bill_List]
       Bottom_Row=[NHLA_URL_Title, GS_Title_Para, '']
 
-      self.doc.rightLogoFile='logo_grayscale-trans.png'
+      self.doc.rightLogoFile=self.Resource_Path + 'logo_grayscale-trans.png'
     else:
       Top_Row=['',NHLA_Title_Para,'']
       Bottom_Row=[NHLA_URL_Title, GS_Title_Para, NHLA_URL_Title]

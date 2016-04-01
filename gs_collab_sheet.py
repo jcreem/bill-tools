@@ -3,6 +3,7 @@ import gspread
 import argparse
 import json
 import logging
+import os
 from reportlab_goldstandard import generate
 
 import bill
@@ -55,7 +56,7 @@ def Normalize_Sheet_Data(Item):
 def Create_Goldstandard_From_Sheet(
   Sheet_URL, GS_Title, Filename, JSON_Key_File, Background_Color):
 
-  json_key = json.load(open('NHLAGS-e8b3911072d5.json'))
+  json_key = json.load(open(os.getenv('GOOGLE_APPLICATION_CREDENTIALS')))
   scope = ['https://spreadsheets.google.com/feeds']
 
   credentials = GoogleCredentials.get_application_default()
