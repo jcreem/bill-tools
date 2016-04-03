@@ -2,8 +2,8 @@
 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4, inch, landscape, letter
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.platypus import BaseDocTemplate, Frame, PageTemplate, PageBreak, Image
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph,\
+   Spacer, BaseDocTemplate, Frame, PageTemplate, PageBreak, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.lib.units import inch
@@ -29,12 +29,15 @@ class Goldstandard:
   def __init__(self, title, filename, background=Gold, \
                Top_Right_To_Inline_Summary_Cutover = 14):
     self.title=title
-    self.Top_Right_To_Inline_Summary_Cutover = Top_Right_To_Inline_Summary_Cutover
+    self.Top_Right_To_Inline_Summary_Cutover = \
+      Top_Right_To_Inline_Summary_Cutover
 
     self.Resource_Path=os.path.dirname(os.path.realpath( __file__ ))+"/../"
 
-    pdfmetrics.registerFont(TTFont('Copperplate-Bold', self.Resource_Path+'ufonts.com_copperplate-bold.ttf'))
-    pdfmetrics.registerFont(TTFont('Copperplate', self.Resource_Path+'ufonts.com_copperplate.ttf'))
+    pdfmetrics.registerFont(TTFont('Copperplate-Bold', \
+      self.Resource_Path+'ufonts.com_copperplate-bold.ttf'))
+    pdfmetrics.registerFont(TTFont('Copperplate', \
+      self.Resource_Path+'ufonts.com_copperplate.ttf'))
     registerFontFamily('Copperplate', normal='Copperplate',
                                       bold='Copperplate-Bold',
                                       italic='Copperplate',
@@ -66,10 +69,17 @@ class Goldstandard:
 
 
 
-    NHLA_Title_Para=Paragraph('<font name="Copperplate-Bold" size=20>New Hampshire Liberty Alliance</font>', NHLA_Style)
-    GS_Header_Para=Paragraph('<font name="Copperplate-Bold" size=68>Gold Standard</font>', GS_Header_Style)
-    GS_Title_Para=Paragraph('<font name="Copperplate" size=14>' + self.title + '</font>', GS_Title_Style)
-    NHLA_URL_Title=Paragraph('<font name="Copperplate-Bold" size=10>' + "<a href=http://nhliberty.org/>NHLIBERTY.ORG</a>" + '</font>', GS_Title_Style)
+    NHLA_Title_Para=Paragraph(
+      '<font name="Copperplate-Bold" size=20>' + \
+      'New Hampshire Liberty Alliance</font>', NHLA_Style)
+    GS_Header_Para=Paragraph(
+      '<font name="Copperplate-Bold" size=68>Gold Standard</font>', \
+        GS_Header_Style)
+    GS_Title_Para=Paragraph('<font name="Copperplate" size=14>' +\
+      self.title + '</font>', GS_Title_Style)
+    NHLA_URL_Title=Paragraph('<font name="Copperplate-Bold" size=10>' + \
+      "<a href=http://nhliberty.org/>NHLIBERTY.ORG</a>" + '</font>', \
+      GS_Title_Style)
 
 
     self.doc.leftLogoFile=self.Resource_Path + 'logo_grayscale-new2.png'
@@ -156,8 +166,10 @@ class Goldstandard:
         Summary_Table=[]
         Bills_Per_Col=len(Bills)//Cols
 
-        Summary_Recommend_Style= ParagraphStyle('summary-style', parent=Normal_Style,
-          alignment=TA_LEFT,spaceBefore=0,spaceAfter=0,fontName='Helvetica',size=10,
+        Summary_Recommend_Style=ParagraphStyle(
+          'summary-style', parent=Normal_Style,
+          alignment=TA_LEFT, spaceBefore=0, spaceAfter=0,\
+          fontName='Helvetica',size=10,
           textColor=colors.white)
 
         for Base_Index in range(0, Bills_Per_Col):
@@ -197,16 +209,19 @@ class Goldstandard:
 
 
     Number_And_Title_Para_Style=Normal_Style=ParagraphStyle('num-title-style',
-      parent=Normal_Style, alignment=TA_LEFT,leftIndent=6, textColor=colors.white,
+      parent=Normal_Style, alignment=TA_LEFT,leftIndent=6, \
+      textColor=colors.white,
       fontName='Helvetica-Bold',fontSize=12, leading=16, spaceBefore=0,
             spaceAfter=0)
 
     Committee_And_Recommend_Para_Style=ParagraphStyle('commit-recommend-style',
-      parent=Normal_Style, alignment=TA_LEFT,leftIndent=6, textColor=colors.white,
+      parent=Normal_Style, alignment=TA_LEFT,leftIndent=6, \
+      textColor=colors.white,
       fontName='Helvetica-Bold', fontSize=11, leading=15)
 
     Liberty_Type_And_Summary_Para_Style=ParagraphStyle('liberty-type-style',
-      parent=Normal_Style, alignment=TA_LEFT,leftIndent=6, textColor=colors.black,
+      parent=Normal_Style, alignment=TA_LEFT,leftIndent=6, \
+      textColor=colors.black,
       fontName='Helvetica-Bold', fontSize=11, leading=15)
 
     #
@@ -228,33 +243,45 @@ class Goldstandard:
 
         Number_And_Title_Para=Paragraph(URL_Text + Bill.Number + '</a>, ' +
           utils.Normalize_Text(Bill.Title), Number_And_Title_Para_Style)
-        Number_Only_Para = Paragraph(bill.Brief_Bill_Number(Bill.Number), Right_Para_Style)
+        Number_Only_Para = Paragraph(bill.Brief_Bill_Number(Bill.Number), \
+        Right_Para_Style)
         RL_Bill_Table.append([Number_And_Title_Para, Number_Only_Para])
 
         Committee_And_Recommendation_Para=Paragraph(Bill.Committee + ': ' +
           Bill.Committee_Recommendation, Committee_And_Recommend_Para_Style)
         RL_Bill_Table.append([Committee_And_Recommendation_Para, ''])
 
-        Liberty_Type_And_Summary_Para=Paragraph(Bill.Liberty_Type.upper() + ': ' +
-          utils.Normalize_Text(Bill.NHLA_Summary), Liberty_Type_And_Summary_Para_Style)
-        NHLA_Recommend_Para=Paragraph(Bill.NHLA_Recommendation, Right_Para_Style)
-        RL_Bill_Table.append([Liberty_Type_And_Summary_Para, NHLA_Recommend_Para])
+        Liberty_Type_And_Summary_Para=Paragraph(Bill.Liberty_Type.upper()\
+           + ': ' + utils.Normalize_Text(Bill.NHLA_Summary), \
+           Liberty_Type_And_Summary_Para_Style)
+        NHLA_Recommend_Para=Paragraph(Bill.NHLA_Recommendation, \
+                                      Right_Para_Style)
+        RL_Bill_Table.append([Liberty_Type_And_Summary_Para, \
+                             NHLA_Recommend_Para])
 
         RL_Bill_Table.append([utils.To_Bullet_List(Bill.GS_Blurb), ''])
 
-        RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row), (0,Base_Row), colors.black)
-        RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row+1), (0,Base_Row+1), ["HORIZONTAL", colors.HexColor(0x606060), colors.black])
-        RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row+2), (0,Base_Row+3), colors.transparent)
+        RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row), (0,Base_Row),\
+           colors.black)
+        RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row+1), (0,Base_Row+1),\
+           ["HORIZONTAL", colors.HexColor(0x606060), colors.black])
+        RL_Bill_Table_Style.add('BACKGROUND',(0,Base_Row+2), (0,Base_Row+3),\
+           colors.transparent)
         RL_Bill_Table_Style.add('VALIGN',(0,Base_Row),(0,Base_Row+3),"TOP")
         RL_Bill_Table_Style.add('VALIGN',(1, Base_Row), (1, Base_Row), "TOP")
-        RL_Bill_Table_Style.add('VALIGN',(1, Base_Row+2), (1, Base_Row+3), "MIDDLE")
+        RL_Bill_Table_Style.add('VALIGN',(1, Base_Row+2), (1, Base_Row+3),\
+           "MIDDLE")
         RL_Bill_Table_Style.add('SPAN', (1,Base_Row), (1,Base_Row+1))
         RL_Bill_Table_Style.add('SPAN', (1,Base_Row+2), (1,Base_Row+3))
-        RL_Bill_Table_Style.add('BACKGROUND', (1,Base_Row), (1,Base_Row+1), colors.black)
-        RL_Bill_Table_Style.add('BACKGROUND', (1,Base_Row+2), (1,Base_Row+3), ["VERTICAL", colors.black, colors.HexColor(0x606060)])
+        RL_Bill_Table_Style.add('BACKGROUND', (1,Base_Row), (1,Base_Row+1), \
+          colors.black)
+        RL_Bill_Table_Style.add('BACKGROUND', (1,Base_Row+2), (1,Base_Row+3),\
+          ["VERTICAL", colors.black, colors.HexColor(0x606060)])
         RL_Bill_Table_Style.add('TOPPADDING',(1,Base_Row+2), (1,Base_Row+3),7)
-        RL_Bill_Table_Style.add('BOTTOMPADDING',(1,Base_Row+2), (1,Base_Row+3),7)
-        RL_Bill_Table_Style.add('BOTTOMPADDING',(0,Base_Row+3), (0,Base_Row+3),3)
+        RL_Bill_Table_Style.add('BOTTOMPADDING',(1,Base_Row+2),\
+           (1,Base_Row+3),7)
+        RL_Bill_Table_Style.add('BOTTOMPADDING',(0,Base_Row+3),\
+           (0,Base_Row+3),3)
         RL_Bill_Table_Style.add('NOSPLIT', (0,Base_Row),(1,Base_Row+3))
         Base_Row=Base_Row+4
 
