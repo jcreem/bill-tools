@@ -30,7 +30,7 @@ class Goldstandard:
                Top_Right_To_Inline_Summary_Cutover = 14):
     self.title=title
     self.Top_Right_To_Inline_Summary_Cutover = Top_Right_To_Inline_Summary_Cutover
- 
+
     self.Resource_Path=os.path.dirname(os.path.realpath( __file__ ))+"/../"
 
     pdfmetrics.registerFont(TTFont('Copperplate-Bold', self.Resource_Path+'ufonts.com_copperplate-bold.ttf'))
@@ -82,6 +82,12 @@ class Goldstandard:
     Summary_Bills=list(Bills)
     Summary_Bills.sort()
 
+    #
+    # Normally, we place a short summary voting recommendation in the top right
+    # corner of the page. If that gets too long though, we will switch and
+    # insert a summary voting block inline with the normal recommendations.
+    # Check to see which case we are in
+    #
     if len(Summary_Bills) <= self.Top_Right_To_Inline_Summary_Cutover:
       Summary_Recommend_Style= ParagraphStyle('summary-style', \
         parent=Normal_Style, alignment=TA_LEFT,spaceBefore=0,
@@ -89,14 +95,26 @@ class Goldstandard:
 
       Bill_List=[]
 
+      #
+      # Each time through this loop, a bill summary recommendation (short bill
+      # number and recommendation) is converted to a paragraph and inserted in
+      # a list intended for the upper right corner of the first page.
+      #
       for Bill in Summary_Bills:
         Bill_List.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + ' ' + \
           Bill.NHLA_Recommendation, Summary_Recommend_Style))
+
       Top_Row=['', NHLA_Title_Para, Bill_List]
       Bottom_Row=[NHLA_URL_Title, GS_Title_Para, '']
 
       self.doc.rightLogoFile=self.Resource_Path + 'logo_grayscale-trans.png'
     else:
+      #
+      # We are in the case where we will do the summary recommendations
+      # inline, so don't do anything with the summary here. Just adapt the
+      # header slightly to make it more visually pleasing in the absense
+      # of the summary voting recommendation
+      #
       Top_Row=['',NHLA_Title_Para,'']
       Bottom_Row=[NHLA_URL_Title, GS_Title_Para, NHLA_URL_Title]
 
@@ -118,7 +136,6 @@ class Goldstandard:
     ('TOPPADDING',(2,0),(2,0),-2),
     ('BOTTOMPADDING',(1,1),(1,1),27),
     ('BOTTOMPADDING',(1,2),(1,2),6),
-#    ('LINEABOVE',(0,0),(-1,-1),0.25,colors.green),
     ('LEFTPADDING',(0,0),(-1,-1),0),
     ('RIGHTPADDING',(0,0),(-1,-1),0),
     ('VALIGN',(0,0),(-1,-1),"TOP"),
@@ -128,7 +145,11 @@ class Goldstandard:
     t.setStyle(Header_Table_Style)
     self.doc.elements.append(t)
 
-
+    #
+    # Now that we spit out the header, check to see if we are in the case with
+    # the summary voting recommendations 'inline' and if so, insert a
+    # summary block here
+    #
     if len(Summary_Bills)>self.Top_Right_To_Inline_Summary_Cutover:
         self.doc.elements.append(Spacer(8.5*inch, 0.05*inch))
         Cols=5
@@ -148,7 +169,6 @@ class Goldstandard:
                   ' ' + Bill.NHLA_Recommendation, Summary_Recommend_Style))
             Summary_Table.append(Row)
 
-#        print Summary_Table
         Summary_Table_Style=TableStyle([
         ('ROWBACKGROUNDS',(0,0),(-1,-1),[colors.black, colors.grey])
         ])
@@ -238,10 +258,14 @@ class Goldstandard:
         RL_Bill_Table_Style.add('NOSPLIT', (0,Base_Row),(1,Base_Row+3))
         Base_Row=Base_Row+4
 
-
-    t=BetterTable(RL_Bill_Table, [7.06*inch, 1.44*inch])
-    t.setStyle(RL_Bill_Table_Style)
-    self.doc.elements.append(t)
+    #
+    # Reportlab does not take kindly to inserting a table with no rows so
+    # if we've ended up with a zero length table, don't insert it
+    #
+    if len(RL_Bill_Table) > 0:
+      t=BetterTable(RL_Bill_Table, [7.06*inch, 1.44*inch])
+      t.setStyle(RL_Bill_Table_Style)
+      self.doc.elements.append(t)
 
 
   def save(self):
