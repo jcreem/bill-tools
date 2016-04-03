@@ -22,9 +22,8 @@
 # 3.3.3 and higher will likely include the capability so we will be able to
 # drop this file.
 #
-# Derivative work from Reportlab code
+# Derivative work from Reportlab code (https://bitbucket.org/rptlab/reportlab/overview)
 # Copyright ReportLab Europe Ltd. 2000-2016
-# history http://www.reportlab.co.uk/cgi-bin/viewcvs.cgi/public/reportlab/trunk/reportlab/platypus/tables.py
 #####################################################################################
 #
 #	Copyright (c) 2000-2014, ReportLab Inc.
