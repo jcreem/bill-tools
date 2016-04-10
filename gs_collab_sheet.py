@@ -75,9 +75,7 @@ def Create_Goldstandard_From_Sheet(
   within the PDF file) is within GS_Title.
 
   JSON_Key_File provides the path to a .json file that is suitible to act as
-  credentials that provide at least read access to the sheet. Note at the
-  moment this parameter is a little wishful thinking as we rely on the value
-  of GOOGLE_APPLICATION_CREDENTIALS environment variable
+  credentials that provide at least read access to the sheet. 
 
   The PDF will utilize the the given Background_Color
 
@@ -88,7 +86,7 @@ def Create_Goldstandard_From_Sheet(
 
   scope = ['https://spreadsheets.google.com/feeds']
 
-
+  os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = JSON_Key_File
   credentials = GoogleCredentials.get_application_default()
   credentials = credentials.create_scoped(scope)
 
