@@ -177,7 +177,7 @@ class Goldstandard:
             for Col_Index in range(0, Cols):
               if Base_Index+Col_Index*Bills_Per_Col < len(Summary_Bills):
                 Bill=Summary_Bills[Base_Index+Col_Index*Bills_Per_Col]
-                Row.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + \
+                Row.append(Paragraph(gs_tools.bill.Brief_Bill_Number(Bill.Number) + \
                   ' ' + Bill.NHLA_Recommendation, Summary_Recommend_Style))
             Summary_Table.append(Row)
 
