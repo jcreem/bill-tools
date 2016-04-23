@@ -13,7 +13,7 @@ from reportlab.pdfbase.pdfmetrics import registerFontFamily
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import ListFlowable, ListItem
 from betterTables import BetterTable
-import gs_tools.bill
+import bill
 import os.path
 
 import utils
@@ -111,7 +111,7 @@ class Goldstandard:
       # a list intended for the upper right corner of the first page.
       #
       for Bill in Summary_Bills:
-        Bill_List.append(Paragraph(gs_tools.bill.Brief_Bill_Number(Bill.Number) + ' ' + \
+        Bill_List.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + ' ' + \
           Bill.NHLA_Recommendation, Summary_Recommend_Style))
 
       Top_Row=['', NHLA_Title_Para, Bill_List]
@@ -239,11 +239,11 @@ class Goldstandard:
     Base_Row=0
     for Bill in Bill_List:
         URL_Text="<a href=http://www.nhliberty.org/bills/view/2016/" + \
-          gs_tools.bill.Brief_Bill_Number(Bill.Number, Separator='') + ">"
+          bill.Brief_Bill_Number(Bill.Number, Separator='') + ">"
 
         Number_And_Title_Para=Paragraph(URL_Text + Bill.Number + '</a>, ' +
           utils.Normalize_Text(Bill.Title), Number_And_Title_Para_Style)
-        Number_Only_Para = Paragraph(gs_tools.bill.Brief_Bill_Number(Bill.Number), \
+        Number_Only_Para = Paragraph(bill.Brief_Bill_Number(Bill.Number), \
         Right_Para_Style)
         RL_Bill_Table.append([Number_And_Title_Para, Number_Only_Para])
 

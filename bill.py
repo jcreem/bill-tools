@@ -1,26 +1,31 @@
 import re
-
+""" bill.py: This module contains a class and utilities for dealing with
+             bills as they pertain to the Goldstandard.
+             """
 #
 # This regular expression is splits apart a bill number string into meaningful
-# pieces.
+# pieces. Each of the defined values below specifies the match index of
+# a portion of
 #
-Title_Leading_Whitespace=1
+Title_Leading_Whitespace=1  # Optional whitespace
 Bill_Prefix=2               # Typically SB, HB, HCR, etc
-Post_Prefix_Whitespace=3
-Bill_Numeric_Portion=4
-Post_Numeric_Whitespace=5
+Post_Prefix_Whitespace=3    # Optional whitespace
+Bill_Numeric_Portion=4      # The numeric portion of the bill
+Post_Numeric_Whitespace=5   # Potential whitespace before any suffix
 Post_Numeric_Suffix=6       # If present, typically -FN, or -LOCAL, etc
 
 Bill_Number_Pattern = re.compile(
   '(\s*)([A-Za-z\-]*)(\s*)(\d*)(\s*)([A-Za-z\-]*)')
 
 #
-# Removes leading whitespace. Capitalizes all letters. Inserts single
-# whitespace beteween prefix and number .. e.g. '  Sb  456' becomes
-# 'SB 456'
+
 #
 def Normalize_Bill_Number(Bill_Number):
-
+  """
+  Removes leading whitespace. Capitalizes all letters. Inserts single
+  whitespace beteween prefix and number .. e.g. '  Sb  456' becomes
+  'SB 456'
+  """
   try:
     m = Bill_Number_Pattern.match(Bill_Number)
     Return_Value= m.group(Bill_Prefix).upper() + ' ' +\
@@ -30,11 +35,13 @@ def Normalize_Bill_Number(Bill_Number):
 
   return Return_Value
 
-#
-# Tables a normalized bill number and removes all text after the numeric
-# portion of the bill (typically where things like -FN or Local are)
-#
+
 def Brief_Bill_Number(Bill_Number, Separator=' '):
+  """
+  Takes a normalized bill number string and removes all text after the numeric
+  portion of the bill (typically where things like -FN or Local are). If
+  significant issues are found then an error string will be returned instead.
+  """
   try:
     m = Bill_Number_Pattern.match(Bill_Number)
     Return_Value=m.group(Bill_Prefix).upper() + Separator + m.group(Bill_Numeric_Portion)
