@@ -65,7 +65,8 @@ def To_Contributor_List(Bill_Contributors):
     a bill in a single string, this function parses the string and returns a
     list of each contributor
     """
-    return Bill_Contributors.split(",")
+
+    return Bill_Contributors.lower().split(",")
 
 def Create_Goldstandard_From_Sheet(
   Sheet_URL, GS_Title, Filename, JSON_Key_File, Background_Color):
@@ -75,7 +76,7 @@ def Create_Goldstandard_From_Sheet(
   within the PDF file) is within GS_Title.
 
   JSON_Key_File provides the path to a .json file that is suitible to act as
-  credentials that provide at least read access to the sheet. 
+  credentials that provide at least read access to the sheet.
 
   The PDF will utilize the the given Background_Color
 
