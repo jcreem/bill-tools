@@ -164,7 +164,24 @@ class Goldstandard:
         self.doc.elements.append(Spacer(8.5*inch, 0.05*inch))
         Cols=5
         Summary_Table=[]
-        Bills_Per_Col=len(Bills)//Cols
+        Bills_Per_Col=len(Summary_Bills)//Cols
+
+        #
+        # handle the case of non-exact number of bills per col to
+        # show all of them
+        Partial_Count = len(Summary_Bills) - Bills_Per_Col * Cols
+
+        #
+        # Col_Bill_Counts contains the number of bills that will be stored
+        # in each column
+        #
+        Col_Bill_Counts=[Bills_Per_Col]*Cols
+        #
+        # But the firt Partial_Count columns will actually have one more
+        #
+        for Bump_Count in range(0,Partial_Count):
+            Col_Bill_Counts[Bump_Count] = Col_Bill_Counts[Bump_Count] + 1
+
 
         Summary_Recommend_Style=ParagraphStyle(
           'summary-style', parent=Normal_Style,
@@ -172,13 +189,26 @@ class Goldstandard:
           fontName='Helvetica',size=10,
           textColor=colors.white)
 
-        for Base_Index in range(0, Bills_Per_Col):
+        #
+        # The first column will always be equal to the largest number of
+        # bills in a column. Each time through this loop we add a row of
+        # bill summary data to the table
+        #
+        for Base_Index in range(0, Col_Bill_Counts[0]):
             Row=[]
+            #
+            # Each time through this loop, we add another column to the current
+            # Row
+            #
             for Col_Index in range(0, Cols):
-              if Base_Index+Col_Index*Bills_Per_Col < len(Summary_Bills):
-                Bill=Summary_Bills[Base_Index+Col_Index*Bills_Per_Col]
-                Row.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + \
-                  ' ' + Bill.NHLA_Recommendation, Summary_Recommend_Style))
+              Bill_Index=sum(Col_Bill_Counts[0:Col_Index]) +  Base_Index
+              if Bill_Index < len(Summary_Bills) and Base_Index < Col_Bill_Counts[Col_Index]:
+                  Bill=Summary_Bills[Bill_Index]
+                  Row.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + \
+                    ' ' + Bill.NHLA_Recommendation, Summary_Recommend_Style))
+              else:
+                  Row.append(str(len(Summary_Bills)))
+
             Summary_Table.append(Row)
 
         Summary_Table_Style=TableStyle([
