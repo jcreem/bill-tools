@@ -207,7 +207,7 @@ class Goldstandard:
                   Row.append(Paragraph(bill.Brief_Bill_Number(Bill.Number) + \
                     ' ' + Bill.NHLA_Recommendation, Summary_Recommend_Style))
               else:
-                  Row.append(str(len(Summary_Bills)))
+                  Row.append('')
 
             Summary_Table.append(Row)
 
