@@ -70,11 +70,20 @@ class Bill:
     Groups_A=Number_A=Bill_Number_Pattern.match(self.Number)
     Groups_B=Bill_Number_Pattern.match(other.Number)
 
+    #
+    # It is almost always the case that what we are dealing with here
+    # is something like HB 123 or SB 456 or some other small text followed
+    # by a numeric prefix. But occasionally,  we need something special
+    # and the bill is not a true bill number at all.
+    # For now, we will arbitrarily just choose to do comparisons as
+    # strings if we get errors trying to look at these as normal bills
+    #
     Prefix_A = Groups_A.group(Bill_Prefix)
     Prefix_B = Groups_B.group(Bill_Prefix)
     Number_A = Groups_A.group(Bill_Numeric_Portion)
     Number_B = Groups_B.group(Bill_Numeric_Portion)
-#    Prefix_A, Number_A = self.Number.split()
-#    Prefix_B, Number_B = other.Number.split()
-
-    return cmp(Prefix_A, Prefix_B) or cmp(int(Number_A), int(Number_B))
+    
+    try: 
+      return cmp(Prefix_A, Prefix_B) or cmp(int(Number_A), int(Number_B))
+    except:
+      return cmp(self.Number, other.Number)
