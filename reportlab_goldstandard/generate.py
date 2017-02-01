@@ -27,7 +27,9 @@ White = colors.white
 class Goldstandard:
 
   def __init__(self, title, filename, background=Gold, \
-               Top_Right_To_Inline_Summary_Cutover = 14):
+               Top_Right_To_Inline_Summary_Cutover = 14,\
+               Right_Side_Font_Size=20):
+    self.Right_Side_Font_Size=Right_Side_Font_Size
     self.title=title
     self.Top_Right_To_Inline_Summary_Cutover = \
       Top_Right_To_Inline_Summary_Cutover
@@ -230,8 +232,8 @@ class Goldstandard:
       'right-col-style',
       parent=ParagraphStyle('normal'),
       alignment=TA_CENTER,
-      fontSize=26,
-      leading=26,
+      fontSize=self.Right_Side_Font_Size,
+      leading=self.Right_Side_Font_Size,
       spaceBefore=0,
       spaceAfter=0,
       textColor=colors.white,
@@ -271,8 +273,18 @@ class Goldstandard:
         URL_Text="<a href=http://www.nhliberty.org/bills/view/2016/" + \
           bill.Brief_Bill_Number(Bill.Number, Separator='') + ">"
 
-        Number_And_Title_Para=Paragraph(URL_Text + Bill.Number + '</a>, ' +
-          utils.Normalize_Text(Bill.Title), Number_And_Title_Para_Style)
+        #
+        # There may be specal cases where we have an entry that does not
+        # have a bill number in which case we want to avoid dropping
+        # in our normal text with a comma and just go blank
+        #
+        if len(Bill.Number.strip()) > 0:
+          Number_And_Title_Para=Paragraph(URL_Text + Bill.Number + '</a>, ' +
+            utils.Normalize_Text(Bill.Title), Number_And_Title_Para_Style)
+        else:
+          Number_And_Title_Para=Paragraph(utils.Normalize_Text(Bill.Title),\
+                                          Number_And_Title_Para_Style)
+
         Number_Only_Para = Paragraph(bill.Brief_Bill_Number(Bill.Number), \
         Right_Para_Style)
         RL_Bill_Table.append([Number_And_Title_Para, Number_Only_Para])

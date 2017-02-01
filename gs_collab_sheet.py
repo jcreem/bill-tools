@@ -69,7 +69,7 @@ def To_Contributor_List(Bill_Contributors):
     return Bill_Contributors.lower().split(",")
 
 def Create_Goldstandard_From_Sheet(
-  Sheet_URL, GS_Title, Filename, JSON_Key_File, Background_Color):
+  Sheet_URL, GS_Title, Filename, JSON_Key_File, Background_Color, Right_Side_Font_Size):
   """
   Given a Sheet_URL to a googlesheet, this function builds a Gold Standard
   PDF File of the given Filename. The title of the standard (As it appears
@@ -158,7 +158,7 @@ def Create_Goldstandard_From_Sheet(
   #
   # Bill_List.sort()
   gs = generate.Goldstandard(title=GS_Title, filename=Filename,
-                             background=Background_Color)
+                             background=Background_Color, Right_Side_Font_Size=Right_Side_Font_Size)
 
   gs.Set_Bills(Bill_List)
   gs.save()
